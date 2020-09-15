@@ -7,8 +7,10 @@ public class Platform {
     {
         cores = Cores;
     }
+
     public void AssignTasks()
     {
 
     }
+
 }
