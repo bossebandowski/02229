@@ -7,7 +7,7 @@ public class Solution {
     public float mcp;
 
     /**
-     * Add
+     * Add a task to solution map?
      * @param t (task to add)
      */
     public void addToArray(SolutionMap t) {
