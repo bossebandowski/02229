@@ -1,14 +1,63 @@
+import java.util.List;
+
 public class Task {
-    private final String id;
-    private final int deadline;
-    private final int period;
-    private final int wcet;
+
+    static public List<Float> priorities;
 
 
-    public Task(String taskID, int ddline, int period, int wcet){
-        this.id = taskID;
-        this.deadline = ddline;
-        this.period = period;
-        this.wcet = wcet;
+    final String id;
+    final int deadline;
+    final int period;
+    private float priority;
+    final int wcet;
+
+
+    public Task(String taskID, int ddline, int period1, int wcet1){
+
+        id = taskID;
+        deadline = ddline;
+        period = period1;
+        wcet = wcet1;
+
+        setPriority();
+
+
+
     }
+
+    public void setPriority(){
+        float priorityTemp = (float) (1.0/period);
+        if(priorities.contains(priorityTemp)){
+            priority = (float) (priorityTemp * 1.00001);
+
+        }else{
+            priority = priorityTemp;
+
+        }
+        priorities.add(priority);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getDeadline() {
+        return deadline;
+    }
+
+    public int getPeriod() {
+        return period;
+    }
+
+    public float getPriority() {
+        return priority;
+    }
+
+    public int getWcet() {
+        return wcet;
+    }
+
+
+
 }
+
