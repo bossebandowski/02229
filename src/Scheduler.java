@@ -12,21 +12,8 @@ public class Scheduler {
         this.platform = platform;
         this.ioHandler = ioHandler;
         this.tasks = tasks;
-
-
     }
-
     public static void main(String[] args) {
-
         Task.priorities = new ArrayList<>();
-
-
-
-
-
-
-
-
-
     }
 }
