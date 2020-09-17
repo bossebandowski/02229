@@ -7,19 +7,13 @@ public class Solution {
     public float mcp;
 
     /**
-     * Add a task to solution map?
+     * Add a task to solution map
      * @param t (task to add)
      */
     public void addToArray(SolutionMap t) {
         this.tasks.add(t);
     }
 
-    /**
-     * TODO: Calculates cost given mapped solution
-     */
-    private void calculateCost() {
-        this.cost = 0;
-    }
 
 }
 
