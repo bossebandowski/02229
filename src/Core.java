@@ -26,6 +26,7 @@ public class Core {
         mcpID = MCPID;
         uid = mcpID + id;
         wcetFactor = WCETFACTOR;
+        this.tasks = new ArrayList<Task>();
         Iterator<Task> tasksIterator = tasks.iterator();
         while(tasksIterator.hasNext())
         {
