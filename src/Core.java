@@ -57,6 +57,9 @@ public class Core {
                 break;
         }
     }
+    public String getId(){
+        return this.id;
+    }
     public ArrayList<Task> getTasks()
     {
         return tasks;

@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Task {
 
-    static public List<Float> priorities;
+    static public ArrayList<Float> priorities;
 
 
     final String id;
@@ -10,6 +10,12 @@ public class Task {
     final int period;
     private float priority;
     final int wcet;
+
+
+
+    private int execution_stop;
+    private float wcrt;
+    private float laxity;
 
 
     public Task(String taskID, int ddline, int period1, int wcet1){
@@ -25,6 +31,7 @@ public class Task {
 
     }
 
+
     public void setPriority(){
         float priorityTemp = (float) (1.0/period);
         if(priorities.contains(priorityTemp)){
@@ -35,6 +42,30 @@ public class Task {
 
         }
         priorities.add(priority);
+    }
+
+    public int getExecution_stop() {
+        return execution_stop;
+    }
+
+    public void setExecution_stop(int execution_stop) {
+        this.execution_stop = execution_stop;
+    }
+
+    public float getWcrt() {
+        return wcrt;
+    }
+
+    public void setWcrt(float wcrt) {
+        this.wcrt = wcrt;
+    }
+
+    public float getLaxity() {
+        return laxity;
+    }
+
+    public void setLaxity(float laxity) {
+        this.laxity = laxity;
     }
 
     public String getId() {
