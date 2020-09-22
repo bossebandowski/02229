@@ -32,7 +32,7 @@ public class Scheduler {
 
         // instantiate missing classes
         // Todo: could move these SA characteristics into arguments of main
-        MetaHeuristic strategy = new SA(0.99f, 100, 60f, null);
+        MetaHeuristic strategy = new SA(0.99f, 100, 60f);
         Scheduler scheduler = new Scheduler(strategy, platform, tasks);
 
         // run assignment strategy
