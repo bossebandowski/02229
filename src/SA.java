@@ -13,7 +13,10 @@ public class SA implements MetaHeuristic{
      * @param stop_criteria
      * @param solution1 - initial solution
      */
+
     public SA(float alpha, float t_start, float stop_criteria, Solution solution1) {
+        /* Todo: Why are we passing a solution here? Instead of doing that, we should maybe call a method here that
+            constructs a solution from scratch! */
         this.alpha = alpha;
         this.t_start = t_start;
         stop_Criteria = stop_criteria;
@@ -29,6 +32,10 @@ public class SA implements MetaHeuristic{
      */
     public void generateNeighbourhood() {
         System.out.println("not implemented");
+    }
+
+    public Solution getSolution() {
+        return solution;
     }
 
     /**
