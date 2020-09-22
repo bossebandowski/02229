@@ -20,7 +20,9 @@ public class Platform {
                 return core;
             }
         }
+        return null;
     }
+
     public void AssignTasks()
     {
 
