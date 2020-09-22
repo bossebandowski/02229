@@ -58,10 +58,12 @@ public class Core {
         }
     }
     public String getId(){
+
         return this.id;
     }
 
     public String getMcpID() {
+
         return mcpID;
     }
 

@@ -18,6 +18,7 @@ public class Platform {
         for (Core core : cores){
             if (core.getId() == coreId){
                 return core;
+
             }
         }
         return null;
