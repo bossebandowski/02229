@@ -9,6 +9,16 @@ public class Platform {
         cores = Cores;
     }
 
+
+    public ArrayList<Core> getCores() {
+        return cores;
+    }
+
+    public Core get_core(String coreId){
+        for (Core core : cores){
+            if (core.getId() == coreId){
+                return core;
+
     public void AssignTasks(String coreID, ArrayList<Task> tasks)
     {
         Iterator<Core> coreIterator = cores.iterator();
@@ -18,6 +28,7 @@ public class Platform {
             if(currentCore.getID().equals(coreID))
             {
                 currentCore.addTask(tasks);
+
             }
         }
     }
