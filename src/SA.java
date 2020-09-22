@@ -19,20 +19,17 @@ public class SA implements MetaHeuristic{
 
 
     /**
-     *
-     * @param alpha
+     *  @param alpha
      * @param t_start
      * @param stop_criteria
-     * @param solution1 - initial solution
      */
 
-    public SA(float alpha, float t_start, float stop_criteria, Solution solution1, Platform platform) {
+    public SA(float alpha, float t_start, float stop_criteria, Platform platform) {
         /* Todo: Why are we passing a solution here? Instead of doing that, we should maybe call a method here that
             constructs a solution from scratch! */
         this.alpha = alpha;
         this.t_start = t_start;
         stop_Criteria = stop_criteria;
-        this.solution = solution1;
         this.platform = platform;
 
 
@@ -56,8 +53,8 @@ public class SA implements MetaHeuristic{
                 while (core1_id == core2_id){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 };
-                Core core1 = platform.get_core(core1_id);
-                Core core2 = platform.get_core(core2_id);
+                Core core1 = platform.getCoreById(core1_id);
+                Core core2 = platform.getCoreById(core2_id);
                 Task task1 = getRandomTask(core1);
                 Task task2 = getRandomTask(core2);
 
@@ -68,13 +65,13 @@ public class SA implements MetaHeuristic{
                 break;
             case move:
                 core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                core1 = platform.get_core(core1_id);
+                core1 = platform.getCoreById(core1_id);
                 Task task = getRandomTask(core1);
                 core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 while (core1_id == core2_id){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 };
-                core2 = platform.get_core(core2_id);
+                core2 = platform.getCoreById(core2_id);
                 new_solution.changeCore(task,core2,core1);
 
 

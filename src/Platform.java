@@ -14,10 +14,15 @@ public class Platform {
         return cores;
     }
 
-    public Core get_core(String coreId){
-        for (Core core : cores){
-            if (core.getId() == coreId){
+    public Core getCoreById(String coreId) {
+
+        for (Core core : cores) {
+            if (core.getId() == coreId) {
                 return core;
+            }
+        }
+        return null;
+    }
 
     public void AssignTasks(String coreID, ArrayList<Task> tasks)
     {
