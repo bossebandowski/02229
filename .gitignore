@@ -23,6 +23,8 @@
 hs_err_pid*
 
 
+# this should hopefully solve our issue
+.idea
 
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
