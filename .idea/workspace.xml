@@ -19,8 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0fd26ef5-f2a5-445e-b049-1a6d72af81a3" name="Default Changelist" comment="">
+    <list default="true" id="0fd26ef5-f2a5-445e-b049-1a6d72af81a3" name="Default Changelist" comment="refactor of folder structure before TestBench implementation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TestBench.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TestBench.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +76,14 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bosse\Documents\GitHub\02229\testResults" />
+      <recent name="C:\Users\bosse\Documents\GitHub\02229\data" />
+      <recent name="C:\Users\bosse\Documents\GitHub\02229\solutions" />
+      <recent name="C:\Users\bosse\Documents\GitHub\02229" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Scheduler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Scheduler" />
@@ -107,7 +117,7 @@
       <workItem from="1600169560647" duration="7893000" />
       <workItem from="1600349682894" duration="28000" />
       <workItem from="1600763224717" duration="4744000" />
-      <workItem from="1600772449996" duration="1687000" />
+      <workItem from="1600772449996" duration="3500000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <created>1599568503812</created>
@@ -144,7 +154,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600763628095</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="refactor of folder structure before TestBench implementation">
+      <created>1600775709199</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1600775709199</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,17 +186,18 @@
     <MESSAGE value="have to commit to pull develop branch. Why are these files in our repo anyway?" />
     <MESSAGE value="updated outdated jdk (11 -&gt; 14)" />
     <MESSAGE value="implemented IOInterface.writeSolution and Scheduler.main,&#10;had to change details in a few other classes to make it work" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented IOInterface.writeSolution and Scheduler.main,&#10;had to change details in a few other classes to make it work" />
+    <MESSAGE value="refactor of folder structure before TestBench implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor of folder structure before TestBench implementation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="249" y="0" key="#Project_Structure" timestamp="1600171036021">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="249" y="0" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1600171036021" />
-    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1600765006578">
+    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1600776781044">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1600765006578" />
+    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1600776781044" />
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1600766884050">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -208,10 +226,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="657" y="280" width="388" height="263" key="MultipleFileMergeDialog/0.0.1536.824@0.0.1536.824" timestamp="1600763408726" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1600768088711">
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1600775722255">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1600768088711" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1600775722255" />
     <state x="578" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600775443627">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

@@ -20,19 +20,7 @@ public class Scheduler {
         return this.strategy.getSolution();
     }
 
-    public static void main(String[] args) {
-        String pathIn = null;
-        String pathOut = null;
-
-        if (args.length < 2) {
-            System.err.println("ERR: TOO FEW ARGUMENTS");
-            System.exit(1);
-        } else {
-            // get file path from argument
-            pathIn = args[0];
-            pathOut = args[1];
-        }
-
+    public static void run(String pathIn, String pathOut) {
         // instantiate Task priorities (class var)
         Task.priorities = new ArrayList<>();
 
@@ -52,6 +40,21 @@ public class Scheduler {
 
         // pass solution to io interface and write to file
         ioHandler.writeSolution(scheduler.getSolution(), pathOut);
+    }
 
+    public static void main(String[] args) {
+        String pathIn = null;
+        String pathOut = null;
+
+        if (args.length < 2) {
+            System.err.println("ERR: TOO FEW ARGUMENTS");
+            System.exit(1);
+        } else {
+            // get file path from argument
+            pathIn = args[0];
+            pathOut = args[1];
+        }
+
+        run(pathIn, pathOut);
     }
 }
