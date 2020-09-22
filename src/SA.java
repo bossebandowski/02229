@@ -11,7 +11,6 @@ public class SA implements MetaHeuristic{
     private float alpha;
     private float t_start;
     private Solution solution;
-    // TODO: I suggest it just being a float modelling run time or calls
     private float stop_Criteria;
     final Platform platform;
 
@@ -23,8 +22,7 @@ public class SA implements MetaHeuristic{
      */
 
     public SA(float alpha, float t_start, float stop_criteria, Platform platform) {
-        /* Todo: Why are we passing a solution here? Instead of doing that, we should maybe call a method here that
-            constructs a solution from scratch! */
+
         this.alpha = alpha;
         this.t_start = t_start;
         stop_Criteria = stop_criteria;
@@ -32,9 +30,7 @@ public class SA implements MetaHeuristic{
 
     }
 
-    /**
-     * TODO: Generates the neighbourhood - method? Random choice? 2-opt
-     */
+
     public Solution generateNeighbourhood(neighborhood_function neighborhood) throws CloneNotSupportedException {
         ArrayList<Core> cores = this.platform.getCores();
         Solution current_solution = getSolution();
