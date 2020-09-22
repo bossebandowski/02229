@@ -90,14 +90,14 @@ public class Core {
             }
             if (tasksToSchedule.isEmpty() == false) {
                 Task highestPriorityTask = getHighestPriority(tasksToSchedule);
-                highestPriorityTask.SetExecution_stop(highestPriorityTask.getExecution_stop() + 1);
+                highestPriorityTask.setExecution_stop(highestPriorityTask.getExecution_stop() + 1);
                 //System.out.println( "HIGHEST"+highestPriorityTask.getId());
                 //System.out.println( "HIGHEST EXECUTION"+highestPriorityTask.getexecutionState());
                 momentSchedule.put(clockCounter, highestPriorityTask.getId());
                 if (highestPriorityTask.getExecution_stop() == Math.ceil((float) highestPriorityTask.getWcet() * wcetFactor)) {
                     System.out.println("Task finished" + highestPriorityTask.getId());
                     tasksToSchedule.remove(highestPriorityTask.getId());
-                    Integer highestWcrt = getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
+                    Integer highestWcrt = (int) getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
                     Integer currentWcrt = clockCounter % (getTaskByID(tasks, highestPriorityTask.getId()).getDeadline());
                     if (highestWcrt <= currentWcrt || highestWcrt == -1) {
                         getTaskByID(tasks, highestPriorityTask.getId()).setWcrt(currentWcrt);
