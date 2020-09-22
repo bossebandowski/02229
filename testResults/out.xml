@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Total Laxity: 12345.0-->
+<solution>
+    <Task Core="1" Id="0" MCP="1" WCET="0.92343"/>
+    <Task Core="3" Id="1" MCP="1" WCET="2343.0"/>
+    <Task Core="2" Id="2" MCP="1" WCET="12345.343"/>
+    <Task Core="1" Id="3" MCP="2" WCET="2343.0"/>
+</solution>
