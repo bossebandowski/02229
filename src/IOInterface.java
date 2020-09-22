@@ -1,9 +1,13 @@
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +16,6 @@ public class IOInterface {
     private ArrayList<Task> tasks = new ArrayList<>();
     private ArrayList<Core> cores = new ArrayList<>();
     private Platform platform;
-    private Solution solution;
-    private String strOut;
-
 
     public void readFile(String path) {
         // snippet based on https://www.javatpoint.com/how-to-read-xml-file-in-java
@@ -38,12 +39,55 @@ public class IOInterface {
             // create platform
             NodeList coreNodes = doc.getElementsByTagName("Core");
             generatePlatform(coreNodes);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("ERR: Could not parse " + path);
             e.printStackTrace();
         }
 
+    }
+
+    public void writeSolution(Solution solution, String path) {
+
+        try {
+            DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+            Document document = documentBuilder.newDocument();
+
+            // root element
+            Element root = document.createElement("solution");
+            document.appendChild(root);
+
+            // add task elements
+            for (SolutionMap assignment : solution.tasks) {
+                Element task = document.createElement("Task");
+                root.appendChild(task);
+
+                task.setAttribute("Id", String.valueOf(assignment.Id));
+                task.setAttribute("MCP", String.valueOf(assignment.MCP));
+                task.setAttribute("Core", String.valueOf(assignment.Core));
+                task.setAttribute("WCET", String.valueOf(assignment.WCET));
+            }
+
+            // add laxity
+            Element element = document.getDocumentElement();
+            Comment comment = document.createComment(" Total Laxity: " + solution.cost);
+            element.getParentNode().insertBefore(comment, element);
+
+            // create the xml file
+            // transform the DOM Object to an XML File
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource domSource = new DOMSource(document);
+            StreamResult streamResult = new StreamResult(new File(path));
+
+            transformer.transform(domSource, streamResult);
+            System.out.println("Done creating XML File");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }
     }
 
     private void generateTasks(NodeList taskNodes) {
@@ -70,10 +114,6 @@ public class IOInterface {
         this.platform = new Platform(this.cores);
     }
 
-    public void setSolution(Solution solution) {
-        this.solution = solution;
-    }
-
     public ArrayList<Task> getTasks() {
         return tasks;
     }
@@ -82,11 +122,25 @@ public class IOInterface {
         return platform;
     }
 
+}
+
+    // for testing purposes only
+
+/*
     public static void main(String[] args) throws IOException {
         Task.priorities = new ArrayList<>();
         IOInterface ioHandler = new IOInterface();
-        ioHandler.readFile("test/small.xml");
-        SA sa = new SA(0,0,0);
-        sa.initializeSolution(ioHandler.cores, ioHandler.tasks);
+        ioHandler.readFile("../test/small.xml");
+
+
+        Solution testSolution = new Solution();
+        testSolution.addToArray(new SolutionMap(0, 1, 1, 0.92343f));
+        testSolution.addToArray(new SolutionMap(1, 1, 3, 2343f));
+        testSolution.addToArray(new SolutionMap(2, 1, 2, 12345.343f));
+        testSolution.addToArray(new SolutionMap(3, 2, 1, 2343.0f));
+        testSolution.setCost(12345f);
+
+        ioHandler.writeSolution(testSolution, "../out.xml");
+
     }
-}
+}*/

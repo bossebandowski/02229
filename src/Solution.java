@@ -7,6 +7,11 @@ public class Solution {
     public float mcp;
 
 
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+
     /**
      * Add a task to solution map
      * @param t (task to add)
@@ -19,23 +24,15 @@ public class Solution {
 }
 
 class SolutionMap {
-    public float Id;
-    public float MCP;
-    public float Core;
-    public float WRCT;
+    public int Id;
+    public int MCP;
+    public int Core;
+    public float WCET;
 
-
-    /**
-     *
-     * @param id task id
-     * @param MCP main core platform
-     * @param core core id
-     * @param WRCT worst case run time
-     */
-    public SolutionMap(float id, float MCP, float core, float WRCT) {
+    public SolutionMap(int id, int MCP, int core, float WCET) {
         this.Id = id;
         this.MCP = MCP;
         this.Core = core;
-        this.WRCT = WRCT;
+        this.WCET = WCET;
     }
 }

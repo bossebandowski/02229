@@ -101,6 +101,10 @@ public class SA implements MetaHeuristic{
     }
 
 
+    public Solution getSolution() {
+        return solution;
+    }
+
     /**
      * Main algorithm loop
      */
