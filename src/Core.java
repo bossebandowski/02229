@@ -114,7 +114,7 @@ public class Core {
                     }
                 }
             }
-            System.out.println("Moment:" + clockCounter + "Scheduled");
+//            System.out.println("Moment:" + clockCounter + "Scheduled");
             clockCounter++;
         }
     }

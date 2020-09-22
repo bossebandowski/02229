@@ -13,6 +13,7 @@ public class Scheduler {
     }
 
     public void runStrategy() {
+        this.strategy.initializeSolution(this.platform.getCores(), (ArrayList<Task>) this.tasks);
         this.strategy.run();
     }
 

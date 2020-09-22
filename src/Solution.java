@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Solution {
 
@@ -47,6 +49,10 @@ public class Solution {
 
         }
         return out;
+    }
+
+    public Collection<Core> getCores(){
+        return this.solutionMap.values();
     }
 
 }

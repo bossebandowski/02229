@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 enum neighborhood_function{
     swap,
@@ -32,19 +30,14 @@ public class SA implements MetaHeuristic{
         stop_Criteria = stop_criteria;
         this.platform = platform;
 
-
-    }
-
-    public static Solution guess_solution() {
-        return new Solution();
     }
 
     /**
      * TODO: Generates the neighbourhood - method? Random choice? 2-opt
      */
-
-    public Solution generateNeighbourhood(neighborhood_function neighborhood,Solution current_solution) throws CloneNotSupportedException {
+    public Solution generateNeighbourhood(neighborhood_function neighborhood) throws CloneNotSupportedException {
         ArrayList<Core> cores = this.platform.getCores();
+        Solution current_solution = getSolution();
         Solution new_solution =current_solution.clone();
         switch (neighborhood){
             case swap:
@@ -92,10 +85,113 @@ public class SA implements MetaHeuristic{
         return solution;
     }
 
-    /**
-     * Main algorithm loop
-     */
-    public void run() {
+    public float f(Solution s) {
+        Collection<Core> cores = s.getCores();
+        Iterator<Core> i = cores.iterator();
+        Core c;
+
+        float total_cost = 0f;
+        while (i.hasNext()) {
+            c = i.next();
+            c.scheduleTasks();
+            total_cost += c.calculateCostFunction();
+
+        }
+        return total_cost;
+    }
+
+    public int partition(ArrayList<Task> arr, int low, int high)
+    {
+        float pivot = arr.get(high).getPriority();
+        int i = (low-1); // index of smaller element
+        for (int j=low; j<high; j++)
+        {
+            // If current element is smaller than the pivot
+            if (arr.get(j).getPriority() < pivot)
+            {
+                i++;
+
+                // swap arr[i] and arr[j]
+                Task temp = arr.get(i);
+                arr.set(i, arr.get(j));
+                arr.set(j, temp);
+            }
+        }
+
+        // swap arr[i+1] and arr[high] (or pivot)
+        Task temp = arr.get(i + 1);
+        arr.set(i + 1, arr.get(high));
+        arr.set(high, temp);
+
+        return i+1;
+    }
+
+
+    /* The main function that implements QuickSort()
+      arr[] --> Array to be sorted,
+      low  --> Starting index,
+      high  --> Ending index */
+    public void sort(ArrayList<Task> arr, int low, int high)
+    {
+        if (low < high)
+        {
+            /* pi is partitioning index, arr[pi] is
+              now at right place */
+            int pi = partition(arr, low, high);
+
+            // Recursively sort elements before
+            // partition and after partition
+            sort(arr, low, pi-1);
+            sort(arr, pi+1, high);
+        }
+    }
+
+    @Override
+    public Solution initializeSolution(ArrayList<Core> cores, ArrayList<Task> tasks) {
+        System.out.println(tasks);
+        int n_tasks = tasks.size();
+        int n_cores = cores.size();
+        this.sort(tasks, 0, n_tasks-1);
+        Core curr_core;
+        Task curr_task;
+        Solution sol = new Solution();
+        int assigned_core = 0;
+
+        for (Task task : tasks) {
+            if (assigned_core == n_cores) {
+                assigned_core = 0;
+            }
+            curr_core = cores.get(assigned_core);
+            curr_task = task;
+            sol.assignTaskToCore(curr_task, curr_core);
+            assigned_core += 1;
+        }
+        this.solution = sol;
+        return sol;
+    }
+
+
+
+    @Override
+    public void run()  {
+        int iters = 0;
+        Solution s_i = getSolution();
+        float t = t_start;
+        Solution next = null;
+        try {
+            // TODO: generate neighboorhood no gud cause clone not supported on solution class
+            next = generateNeighbourhood(neighborhood_function.swap);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        while (iters <= stop_Criteria) {
+            float delta = f(s_i) - f(next);
+
+            if (delta > 0 ||p(delta, t_start)) {
+                s_i = next;
+            }
+        }
         /**
          * SUDO CODE
          * s_i = inital solution
@@ -111,8 +207,9 @@ public class SA implements MetaHeuristic{
         System.out.println("Not implemented");
     }
 
-
-
+    private boolean p(float delta, float t_start) {
+        return false;
+    }
 
 
 }
