@@ -19,8 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0fd26ef5-f2a5-445e-b049-1a6d72af81a3" name="Default Changelist" comment="unversioned commit">
-      <change beforePath="$PROJECT_DIR$/src/Platform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Platform.java" afterDir="false" />
+    <list default="true" id="0fd26ef5-f2a5-445e-b049-1a6d72af81a3" name="Default Changelist" comment="pre core fix">
+      <change beforePath="$PROJECT_DIR$/src/Core.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +51,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="TestBench" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -159,7 +159,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600775709199</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="pre core fix">
+      <created>1600782945882</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1600782945882</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,7 +192,8 @@
     <MESSAGE value="updated outdated jdk (11 -&gt; 14)" />
     <MESSAGE value="implemented IOInterface.writeSolution and Scheduler.main,&#10;had to change details in a few other classes to make it work" />
     <MESSAGE value="refactor of folder structure before TestBench implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor of folder structure before TestBench implementation" />
+    <MESSAGE value="pre core fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="pre core fix" />
   </component>
   <component name="WindowStateProjectService">
     <state x="249" y="0" key="#Project_Structure" timestamp="1600171036021">
