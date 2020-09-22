@@ -117,9 +117,10 @@ public class Core {
     public String getMcpID() {
 
         return mcpID;
+    }
 
 
-    public ArrayList<Task> getTasks() {
+    public ArrayList<Task> getTasks(){
         return tasks;
     }
 
