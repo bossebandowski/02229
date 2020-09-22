@@ -58,7 +58,7 @@ public class IOInterface {
             document.appendChild(root);
 
             // add task elements
-            for (SolutionMap assignment : solution.tasks) {
+            for (SolutionOutput assignment : solution.getSolutionOutput()) {
                 Element task = document.createElement("Task");
                 root.appendChild(task);
 

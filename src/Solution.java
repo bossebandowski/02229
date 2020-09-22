@@ -14,11 +14,6 @@ public class Solution {
     }
 
 
-    /**
-     * Add a task to solution map
-     * @param t (task to add)
-     */
-
 
 
     public void assignTaskToCore(Task task, Core core){
@@ -36,18 +31,33 @@ public class Solution {
         return (Solution) super.clone();
     }
 
+    public ArrayList<SolutionOutput> getSolutionOutput(){
+
+        ArrayList<SolutionOutput> out = new ArrayList<>();
+
+        for (Task task : solutionMap.keySet()) {
+            String task_id = task.getId();
+            Core core = solutionMap.get(task);
+            String core_id=core.getId();
+            String core_MCP = core.getMcpID();
+            float wcet = task.getWcet();
+            SolutionOutput solutionOut = new SolutionOutput(task_id,core_id,core_MCP,wcet);
+            out.add(solutionOut);
 
 
+        }
+        return out;
+    }
 
 }
 
-class SolutionMap {
-    public int Id;
-    public int MCP;
-    public int Core;
+class SolutionOutput {
+    public String Id;
+    public String MCP;
+    public String Core;
     public float WCET;
 
-    public SolutionMap(int id, int MCP, int core, float WCET) {
+    public SolutionOutput(String id, String MCP, String core, float WCET) {
         this.Id = id;
         this.MCP = MCP;
         this.Core = core;
