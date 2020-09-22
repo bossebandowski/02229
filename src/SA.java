@@ -25,12 +25,12 @@ public class SA implements MetaHeuristic{
      * @param alpha
      * @param t_start
      * @param stop_criteria
-     * @param solution1 - initial solution
      */
-    public SA(float alpha, float t_start, float stop_criteria) {
+    public SA(float alpha, float t_start, float stop_criteria, Platform platform1) {
         this.alpha = alpha;
         this.t_start = t_start;
         stop_Criteria = stop_criteria;
+        this.platform = platform1;
     }
     public static Solution guess_solution() {
         return new Solution();
@@ -122,9 +122,10 @@ public class SA implements MetaHeuristic{
         System.out.println(tasks);
         int n_tasks = tasks.size();
         int n_cores = cores.size();
-        this.sort(n_tasks, 0, n-1);
+        this.sort(tasks, 0, n_tasks-1);
         Core curr_core;
         Task curr_task;
+        Solution sol = new Solution();
         int assigned_core = 0;
 
         for (Task task : tasks) {
@@ -133,9 +134,10 @@ public class SA implements MetaHeuristic{
             }
             curr_core = cores.get(assigned_core);
             curr_task = task;
-            curr_core.addTask(curr_task);
+            sol.assignTaskToCore(curr_task, curr_core);
             assigned_core += 1;
         }
+        return sol;
     }
 
 
