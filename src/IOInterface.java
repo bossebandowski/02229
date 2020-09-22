@@ -5,6 +5,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class IOInterface {
@@ -13,6 +14,7 @@ public class IOInterface {
     private Platform platform;
     private Solution solution;
     private String strOut;
+
 
     public void readFile(String path) {
         // snippet based on https://www.javatpoint.com/how-to-read-xml-file-in-java
@@ -80,8 +82,11 @@ public class IOInterface {
         return platform;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Task.priorities = new ArrayList<>();
         IOInterface ioHandler = new IOInterface();
-        ioHandler.readFile("../test/small.xml");
+        ioHandler.readFile("test/small.xml");
+
+
     }
 }
