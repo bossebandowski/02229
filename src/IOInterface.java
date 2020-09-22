@@ -86,7 +86,7 @@ public class IOInterface {
         Task.priorities = new ArrayList<>();
         IOInterface ioHandler = new IOInterface();
         ioHandler.readFile("test/small.xml");
-
-
+        SA sa = new SA(0,0,0);
+        sa.initializeSolution(ioHandler.cores, ioHandler.tasks);
     }
 }
