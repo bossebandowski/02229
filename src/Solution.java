@@ -53,7 +53,4 @@ class SolutionMap {
         this.Core = core;
         this.WCET = WCET;
     }
-
-
-
 }

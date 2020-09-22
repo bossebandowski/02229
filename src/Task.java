@@ -88,7 +88,15 @@ public class Task {
         return wcet;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id='" + id + '\'' +
+                ", deadline=" + deadline +
+                ", period=" + period +
+                ", priority=" + priority +
+                ", wcet=" + wcet +
+                '}';
+    }
 }
 

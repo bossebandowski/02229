@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 enum neighborhood_function{
@@ -23,17 +27,11 @@ public class SA implements MetaHeuristic{
      * @param stop_criteria
      * @param solution1 - initial solution
      */
-
-    public SA(float alpha, float t_start, float stop_criteria, Solution solution1, Platform platform) {
-        /* Todo: Why are we passing a solution here? Instead of doing that, we should maybe call a method here that
-            constructs a solution from scratch! */
+    public SA(float alpha, float t_start, float stop_criteria) {
         this.alpha = alpha;
         this.t_start = t_start;
         stop_Criteria = stop_criteria;
-        this.solution = solution1;
-        this.platform = platform;
     }
-
     public static Solution guess_solution() {
         return new Solution();
     }
@@ -70,6 +68,74 @@ public class SA implements MetaHeuristic{
         ArrayList<Task> tasks =  core.getTasks();
         int rnd = new Random().nextInt(tasks.size());
         return tasks.get(rnd);
+    }
+
+
+
+
+    public int partition(ArrayList<Task> arr, int low, int high)
+    {
+        float pivot = arr.get(high).getPriority();
+        int i = (low-1); // index of smaller element
+        for (int j=low; j<high; j++)
+        {
+            // If current element is smaller than the pivot
+            if (arr.get(j).getPriority() < pivot)
+            {
+                i++;
+
+                // swap arr[i] and arr[j]
+                Task temp = arr.get(i);
+                arr.set(i, arr.get(j));
+                arr.set(j, temp);
+            }
+        }
+
+        // swap arr[i+1] and arr[high] (or pivot)
+        Task temp = arr.get(i + 1);
+        arr.set(i + 1, arr.get(high));
+        arr.set(high, temp);
+
+        return i+1;
+    }
+
+
+    /* The main function that implements QuickSort()
+      arr[] --> Array to be sorted,
+      low  --> Starting index,
+      high  --> Ending index */
+    public void sort(ArrayList<Task> arr, int low, int high)
+    {
+        if (low < high)
+        {
+            /* pi is partitioning index, arr[pi] is
+              now at right place */
+            int pi = partition(arr, low, high);
+
+            // Recursively sort elements before
+            // partition and after partition
+            sort(arr, low, pi-1);
+            sort(arr, pi+1, high);
+        }
+    }
+    public Solution initializeSolution(ArrayList<Core> cores, ArrayList<Task> tasks) {
+        System.out.println(tasks);
+        int n_tasks = tasks.size();
+        int n_cores = cores.size();
+        this.sort(n_tasks, 0, n-1);
+        Core curr_core;
+        Task curr_task;
+        int assigned_core = 0;
+
+        for (Task task : tasks) {
+            if (assigned_core == n_cores) {
+                assigned_core = 0;
+            }
+            curr_core = cores.get(assigned_core);
+            curr_task = task;
+            curr_core.addTask(curr_task);
+            assigned_core += 1;
+        }
     }
 
 
