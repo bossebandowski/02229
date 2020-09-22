@@ -60,6 +60,11 @@ public class Core {
     public String getId(){
         return this.id;
     }
+
+    public String getMcpID() {
+        return mcpID;
+    }
+
     public ArrayList<Task> getTasks()
     {
         return tasks;
