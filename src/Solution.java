@@ -10,6 +10,13 @@ public class Solution {
     public float cost;
     public float mcp;
 
+    public Solution() {}
+
+    public Solution(HashMap<Task, Core> solutionMap, float cost) {
+        this.cost = cost;
+        this.solutionMap = solutionMap;
+    }
+
 
     public void setCost(float cost) {
         this.cost = cost;
@@ -29,8 +36,9 @@ public class Solution {
     }
 
 
-    protected Solution clone() throws CloneNotSupportedException{
-        return (Solution) super.clone();
+    protected Solution clone() throws CloneNotSupportedException {
+        HashMap<Task, Core> mapCopy = (HashMap<Task, Core>) this.solutionMap.clone();
+        return new Solution(mapCopy, this.cost);
     }
 
     public ArrayList<SolutionOutput> getSolutionOutput(){

@@ -12,10 +12,12 @@ public class Platform {
     public Core getCoreById(String coreId) {
 
         for (Core core : cores) {
-            if (core.getId() == coreId) {
+            if (core.getUid().equals(coreId)) {
                 return core;
             }
         }
+
+        System.out.println("Core = null");
         return null;
     }
 

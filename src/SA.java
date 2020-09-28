@@ -25,7 +25,7 @@ public class SA implements MetaHeuristic{
 
         this.alpha = alpha;
         this.t_start = t_start;
-        stop_Criteria = stop_criteria;
+        this.stop_Criteria = stop_criteria;
         this.platform = platform;
 
     }
@@ -34,16 +34,19 @@ public class SA implements MetaHeuristic{
     public Solution generateNeighbourhood(neighborhood_function neighborhood) throws CloneNotSupportedException {
         ArrayList<Core> cores = this.platform.getCores();
         Solution current_solution = getSolution();
-        Solution new_solution =current_solution.clone();
+        Solution new_solution = current_solution.clone();
         switch (neighborhood){
             case swap:
                 String core1_id = String.valueOf(new Random().nextInt(cores.size()));
                 String core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                while (core1_id == core2_id){
+
+                while (core1_id.equals(core2_id)){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                };
+                }
+
                 Core core1 = platform.getCoreById(core1_id);
                 Core core2 = platform.getCoreById(core2_id);
+
                 Task task1 = getRandomTask(core1);
                 Task task2 = getRandomTask(core2);
 
@@ -57,7 +60,7 @@ public class SA implements MetaHeuristic{
                 core1 = platform.getCoreById(core1_id);
                 Task task = getRandomTask(core1);
                 core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                while (core1_id == core2_id){
+                while (core1_id.equals(core2_id)){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 };
                 core2 = platform.getCoreById(core2_id);
@@ -144,7 +147,7 @@ public class SA implements MetaHeuristic{
 
     @Override
     public Solution initializeSolution(ArrayList<Core> cores, ArrayList<Task> tasks) {
-        System.out.println(tasks);
+        //System.out.println(tasks);
         int n_tasks = tasks.size();
         int n_cores = cores.size();
         this.sort(tasks, 0, n_tasks-1);
@@ -170,7 +173,6 @@ public class SA implements MetaHeuristic{
 
     @Override
     public void run()  {
-        int iters = 0;
         Solution s_i = getSolution();
         float t = t_start;
         Solution next = null;
@@ -181,26 +183,14 @@ public class SA implements MetaHeuristic{
             e.printStackTrace();
         }
 
-        while (iters <= stop_Criteria) {
+        System.out.println("Running for " + stop_Criteria + " seconds...");
+        long t0 = System.currentTimeMillis();
+        while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
             float delta = f(s_i) - f(next);
-
-            if (delta > 0 ||p(delta, t_start)) {
+            if (delta > 0 || p(delta, t_start)) {
                 s_i = next;
             }
         }
-        /**
-         * SUDO CODE
-         * s_i = inital solution
-         * t = t_start
-         * N = neighborhood of s_i
-         * while not stopping_criteria
-         *      take random s in N
-         *      delta = f(s) - f(s_i)
-         *      if delta > 0 or p(delta, t)
-         *          s_i = s
-         *          t = t * alpha
-     */
-        System.out.println("Not implemented");
     }
 
     private boolean p(float delta, float t_start) {

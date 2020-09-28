@@ -81,12 +81,9 @@ public class IOInterface {
             StreamResult streamResult = new StreamResult(new File(path));
 
             transformer.transform(domSource, streamResult);
-            System.out.println("Done creating XML File");
 
-        } catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException | TransformerException pce) {
             pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
         }
     }
 
@@ -123,24 +120,3 @@ public class IOInterface {
     }
 
 }
-
-    // for testing purposes only
-
-/*
-    public static void main(String[] args) throws IOException {
-        Task.priorities = new ArrayList<>();
-        IOInterface ioHandler = new IOInterface();
-        ioHandler.readFile("../test/small.xml");
-
-
-        Solution testSolution = new Solution();
-        testSolution.addToArray(new SolutionMap(0, 1, 1, 0.92343f));
-        testSolution.addToArray(new SolutionMap(1, 1, 3, 2343f));
-        testSolution.addToArray(new SolutionMap(2, 1, 2, 12345.343f));
-        testSolution.addToArray(new SolutionMap(3, 2, 1, 2343.0f));
-        testSolution.setCost(12345f);
-
-        ioHandler.writeSolution(testSolution, "../out.xml");
-
-    }
-}*/

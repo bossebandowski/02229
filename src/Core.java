@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Core {
+    static int count = 0;
     final String id;
     final String mcpID;
     final String uid;
@@ -17,7 +18,8 @@ public class Core {
     public Core(String _id, String _mcpID, float _wcetFactor) {
         id = _id;
         mcpID = _mcpID;
-        uid = mcpID + id;
+        uid = String.valueOf(count);
+        count++;
         wcetFactor = _wcetFactor;
         maxPeriod = 0;
     }
@@ -68,6 +70,10 @@ public class Core {
         tasks.addAll(newTasks);
     }
 
+    public String getUid() {
+        return uid;
+    }
+
     public String getId() {
         return id;
     }
@@ -94,18 +100,16 @@ public class Core {
                     if (currentValue == clockCounter) {
                         Task currentTask = getTaskByID(tasks, entry.getKey());
                         if (tasksToSchedule.contains(currentTask) == false) {
-                            System.out.println("ADDED");
                             tasksToSchedule.add(entry.getKey());
                         }
                     }
                 }
             }
-            if (tasksToSchedule.isEmpty() == false) {
+            if (!tasksToSchedule.isEmpty()) {
                 Task highestPriorityTask = getHighestPriority(tasksToSchedule);
                 highestPriorityTask.setExecution_stop(highestPriorityTask.getExecution_stop() + 1);
                 momentSchedule.put(clockCounter, highestPriorityTask.getId());
                 if (highestPriorityTask.getExecution_stop() == Math.ceil((float) highestPriorityTask.getWcet() * wcetFactor)) {
-                    System.out.println("Task finished" + highestPriorityTask.getId());
                     tasksToSchedule.remove(highestPriorityTask.getId());
                     Integer highestWcrt = (int) getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
                     Integer currentWcrt = clockCounter % (getTaskByID(tasks, highestPriorityTask.getId()).getDeadline());
