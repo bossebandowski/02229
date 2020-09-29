@@ -87,7 +87,6 @@ public class Core {
      * Main task scheduler algorithm
      */
     public void scheduleTasks() {
-        System.out.println("Schedule Tasks called");
         reInit();
         Integer clockCounter = 0;
         ArrayList<String> tasksToSchedule = new ArrayList<String>();
@@ -95,25 +94,24 @@ public class Core {
             for (Map.Entry<String, ArrayList<Integer>> entry : TaskPeriodsStart.entrySet()) {
                 //System.out.println(entry.getKey());
                 ArrayList<Integer> startingMoments = entry.getValue();
-                Iterator<Integer> startingMomentIterator = startingMoments.iterator();
-                while (startingMomentIterator.hasNext()) {
-                    Integer currentValue = startingMomentIterator.next();
-                    if (currentValue == clockCounter) {
+                for (Integer currentValue : startingMoments) {
+                    if (currentValue.equals(clockCounter)) {
                         Task currentTask = getTaskByID(tasks, entry.getKey());
-                        if (tasksToSchedule.contains(currentTask) == false) {
+                        if (!tasksToSchedule.contains(currentTask)) {
                             tasksToSchedule.add(entry.getKey());
                         }
                     }
                 }
             }
+
             if (!tasksToSchedule.isEmpty()) {
                 Task highestPriorityTask = getHighestPriority(tasksToSchedule);
                 highestPriorityTask.setExecution_stop(highestPriorityTask.getExecution_stop() + 1);
                 momentSchedule.put(clockCounter, highestPriorityTask.getId());
                 if (highestPriorityTask.getExecution_stop() == Math.ceil((float) highestPriorityTask.getWcet() * wcetFactor)) {
                     tasksToSchedule.remove(highestPriorityTask.getId());
-                    Integer highestWcrt = (int) getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
-                    Integer currentWcrt = clockCounter % (getTaskByID(tasks, highestPriorityTask.getId()).getDeadline());
+                    int highestWcrt = (int) getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
+                    int currentWcrt = clockCounter % (getTaskByID(tasks, highestPriorityTask.getId()).getDeadline());
                     if (highestWcrt <= currentWcrt || highestWcrt == -1) {
                         getTaskByID(tasks, highestPriorityTask.getId()).setWcrt(currentWcrt);
                     }
@@ -270,7 +268,7 @@ public class Core {
         Iterator<Task> taskIterator = tasks.iterator();
         while (taskIterator.hasNext()) {
             Task currentTask = taskIterator.next();
-            float currentWcrt = (float) currentTask.getWcrt();
+            float currentWcrt = currentTask.getWcrt();
             float currentDeadline = (float) currentTask.getDeadline();
             result += Math.abs(currentDeadline - currentWcrt);
         }
