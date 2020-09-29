@@ -181,19 +181,27 @@ public class SA implements MetaHeuristic{
         System.out.println("Running for " + stop_Criteria + " seconds...");
         long t0 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
-            if (Math.random() < 0.5) {
+          
+             if (Math.random() < 0.5) {
                 next = generateNeighbourhood(neighborhood_function.swap);
             } else {
                 next = generateNeighbourhood(neighborhood_function.move);
             }
 
-            float delta = f(s_i) - f(next);
-            System.out.println(p(delta, t));
+            float costCurrent = f(s_i);
+            float costNext = f(next);
+
+            float delta = costCurrent - costNext;
             if (delta > 0 || p(delta, t)) {
                 s_i = next;
+                s_i.setLaxity(costNext);
+                t = t*alpha;
+
             }
             t = t*alpha;
         }
+
+        this.solution = s_i;
     }
 
     private boolean p(float delta, float t) {
