@@ -6,6 +6,11 @@ public class Scheduler {
     private final Platform platform;
     private List<Task> tasks;
 
+    static float alpha = 0.99f;
+    static float t_start = 100;
+    static float runtime_s = 10f;
+
+
     public Scheduler(MetaHeuristic strategy, Platform platform1, ArrayList<Task> tasks) {
         this.strategy = strategy;
         this.platform = platform1;
@@ -36,10 +41,13 @@ public class Scheduler {
 
         // instantiate missing classes
         // Todo: could move these SA characteristics into arguments of main
-        MetaHeuristic strategy = new SA(0.99f, 100, 60f, platform);
+        MetaHeuristic strategy = new SA(alpha, t_start, runtime_s, platform);
         Scheduler scheduler = new Scheduler(strategy, platform, tasks);
 
-        System.out.println("Invoking scheduling strategy...");
+        System.out.println("Invoking scheduling strategy with the following parameters:");
+        System.out.println("\talpha:\t\t" + alpha);
+        System.out.println("\tt_start:\t" + t_start);
+        System.out.println("\truntime:\t" + runtime_s + "s");
 
         // run assignment strategy
         scheduler.runStrategy();
@@ -49,6 +57,41 @@ public class Scheduler {
         ioHandler.writeSolution(scheduler.getSolution(), pathOut);
 
         System.out.println("Done.");
+    }
+
+    public static void parseArgs(String[] args) {
+        int i = 0;
+        while (i < args.length) {
+            /* Check for options */
+            if (args[i].equals("--a")) {
+                try {
+                    i++;
+                    alpha = Float.parseFloat(args[i]);
+                    System.out.println("alpha set to " + alpha);
+                } catch (Exception e) {
+                    System.out.println("Invalid alpha assignment. Running with standard value " + alpha);
+                }
+            } else if (args[i].equals("--t")) {
+                try {
+                    i++;
+                    t_start = Float.parseFloat(args[i]);
+                    System.out.println("t_start set to " + t_start);
+
+                } catch (Exception e) {
+                    System.out.println("Invalid t_start assignment. Running with standard value " + t_start);
+                }
+            } else if (args[i].equals("--rt")) {
+                try {
+                    i++;
+                    runtime_s = Float.parseFloat(args[i]);
+                    System.out.println("runtime set to " + runtime_s + "s");
+                } catch (Exception e) {
+                    System.out.println("Invalid runtime assignment. Running with standard value " + runtime_s);
+                }
+            }
+
+            i++;
+        }
     }
 
     public static void main(String[] args) {
@@ -62,6 +105,7 @@ public class Scheduler {
             // get file path from argument
             pathIn = args[0];
             pathOut = args[1];
+            parseArgs(args);
         }
 
         run(pathIn, pathOut);
