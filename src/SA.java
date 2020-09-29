@@ -1,4 +1,6 @@
 import java.util.*;
+import java.lang.Math;
+import java.util.Random;
 
 enum neighborhood_function{
     swap,
@@ -31,7 +33,7 @@ public class SA implements MetaHeuristic{
     }
 
 
-    public Solution generateNeighbourhood(neighborhood_function neighborhood) throws CloneNotSupportedException {
+    public Solution generateNeighbourhood(neighborhood_function neighborhood)  {
         ArrayList<Core> cores = this.platform.getCores();
         Solution current_solution = getSolution();
         Solution new_solution = current_solution.clone();
@@ -176,28 +178,22 @@ public class SA implements MetaHeuristic{
         Solution s_i = getSolution();
         float t = t_start;
         Solution next = null;
-        try {
-            // TODO: generate neighboorhood no gud cause clone not supported on solution class
-            next = generateNeighbourhood(neighborhood_function.swap);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
         System.out.println("Running for " + stop_Criteria + " seconds...");
         long t0 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
+            next = generateNeighbourhood(neighborhood_function.swap);
             float delta = f(s_i) - f(next);
-            if (delta > 0 || p(delta, t_start)) {
+            if (delta > 0 || p(delta, t)) {
                 s_i = next;
+                t = t*alpha;
             }
         }
     }
 
-    private boolean p(float delta, float t_start) {
-        return false;
+    private boolean p(float delta, float t) {
+        double random = Math.random();
+        return Math.exp(delta / t) > random;
     }
-
-
 }
 
 

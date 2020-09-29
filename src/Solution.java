@@ -36,7 +36,7 @@ public class Solution {
     }
 
 
-    protected Solution clone() throws CloneNotSupportedException {
+    protected Solution clone() {
         HashMap<Task, Core> mapCopy = (HashMap<Task, Core>) this.solutionMap.clone();
         return new Solution(mapCopy, this.cost);
     }
