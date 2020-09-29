@@ -78,10 +78,7 @@ public class SA implements MetaHeuristic{
         int rnd = new Random().nextInt(tasks.size());
         return tasks.get(rnd);
     }
-
-
-
-
+    
     public Solution getSolution() {
         return solution;
     }

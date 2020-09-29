@@ -87,6 +87,7 @@ public class Core {
      * Main task scheduler algorithm
      */
     public void scheduleTasks() {
+        System.out.println("Schedule Tasks called");
         reInit();
         Integer clockCounter = 0;
         ArrayList<String> tasksToSchedule = new ArrayList<String>();
