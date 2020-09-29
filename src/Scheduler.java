@@ -13,6 +13,9 @@ public class Scheduler {
     }
 
     public void runStrategy() {
+        System.out.println("Creating initial solution...");
+        this.strategy.initializeSolution(this.platform.getCores(), (ArrayList<Task>) this.tasks);
+        System.out.println("Optimising via SA...");
         this.strategy.run();
     }
 
@@ -24,6 +27,7 @@ public class Scheduler {
         // instantiate Task priorities (class var)
         Task.priorities = new ArrayList<>();
 
+        System.out.println("Reading file...");
         // read file
         IOInterface ioHandler = new IOInterface();
         ioHandler.readFile(pathIn);
@@ -32,14 +36,19 @@ public class Scheduler {
 
         // instantiate missing classes
         // Todo: could move these SA characteristics into arguments of main
-        MetaHeuristic strategy = new SA(0.99f, 100, 60f, platform);
+        MetaHeuristic strategy = new SA(0.99f, 100, 2f, platform);
         Scheduler scheduler = new Scheduler(strategy, platform, tasks);
+
+        System.out.println("Invoking scheduling strategy...");
 
         // run assignment strategy
         scheduler.runStrategy();
 
+        System.out.println("Writing to output file...");
         // pass solution to io interface and write to file
         ioHandler.writeSolution(scheduler.getSolution(), pathOut);
+
+        System.out.println("Done.");
     }
 
     public static void main(String[] args) {

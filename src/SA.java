@@ -1,8 +1,5 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.PriorityQueue;
-
-import java.util.ArrayList;
+import java.util.*;
+import java.lang.Math;
 import java.util.Random;
 
 enum neighborhood_function{
@@ -16,42 +13,42 @@ public class SA implements MetaHeuristic{
     private float alpha;
     private float t_start;
     private Solution solution;
-    // TODO: I suggest it just being a float modelling run time or calls
     private float stop_Criteria;
     final Platform platform;
 
+
     /**
-     *
-     * @param alpha
+     *  @param alpha
      * @param t_start
      * @param stop_criteria
      */
-    public SA(float alpha, float t_start, float stop_criteria, Platform platform1) {
+
+    public SA(float alpha, float t_start, float stop_criteria, Platform platform) {
+
         this.alpha = alpha;
         this.t_start = t_start;
-        stop_Criteria = stop_criteria;
-        this.platform = platform1;
-    }
-    public static Solution guess_solution() {
-        return new Solution();
+        this.stop_Criteria = stop_criteria;
+        this.platform = platform;
+
     }
 
-    /**
-     * TODO: Generates the neighbourhood - method? Random choice? 2-opt
-     */
-    public void generateNeighbourhood(neighborhood_function neighborhood,Solution current_solution) throws CloneNotSupportedException {
+
+    public Solution generateNeighbourhood(neighborhood_function neighborhood)  {
         ArrayList<Core> cores = this.platform.getCores();
-        int l;
-        Solution new_solution =current_solution.clone();
+        Solution current_solution = getSolution();
+        Solution new_solution = current_solution.clone();
         switch (neighborhood){
             case swap:
                 String core1_id = String.valueOf(new Random().nextInt(cores.size()));
                 String core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                while (core1_id == core2_id){
+
+                while (core1_id.equals(core2_id)){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                };
-                Core core1 = platform.get_core(core1_id);
-                Core core2 = platform.get_core(core2_id);
+                }
+
+                Core core1 = platform.getCoreById(core1_id);
+                Core core2 = platform.getCoreById(core2_id);
+
                 Task task1 = getRandomTask(core1);
                 Task task2 = getRandomTask(core2);
 
@@ -61,8 +58,20 @@ public class SA implements MetaHeuristic{
             case three_opt:
                 break;
             case move:
-                break;
+                core1_id = String.valueOf(new Random().nextInt(cores.size()));
+                core1 = platform.getCoreById(core1_id);
+                Task task = getRandomTask(core1);
+                core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                while (core1_id.equals(core2_id)){
+                    core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                };
+                core2 = platform.getCoreById(core2_id);
+                new_solution.changeCore(task,core2,core1);
+
+
+
         };
+        return new_solution;
     }
     public Task getRandomTask(Core core) {
         ArrayList<Task> tasks =  core.getTasks();
@@ -72,6 +81,25 @@ public class SA implements MetaHeuristic{
 
 
 
+
+    public Solution getSolution() {
+        return solution;
+    }
+
+    public float f(Solution s) {
+        Collection<Core> cores = s.getCores();
+        Iterator<Core> i = cores.iterator();
+        Core c;
+
+        float total_cost = 0f;
+        while (i.hasNext()) {
+            c = i.next();
+            c.scheduleTasks();
+            total_cost += c.calculateCostFunction();
+
+        }
+        return total_cost;
+    }
 
     public int partition(ArrayList<Task> arr, int low, int high)
     {
@@ -118,8 +146,10 @@ public class SA implements MetaHeuristic{
             sort(arr, pi+1, high);
         }
     }
+
+    @Override
     public Solution initializeSolution(ArrayList<Core> cores, ArrayList<Task> tasks) {
-        System.out.println(tasks);
+        //System.out.println(tasks);
         int n_tasks = tasks.size();
         int n_cores = cores.size();
         this.sort(tasks, 0, n_tasks-1);
@@ -137,37 +167,40 @@ public class SA implements MetaHeuristic{
             sol.assignTaskToCore(curr_task, curr_core);
             assigned_core += 1;
         }
+        this.solution = sol;
         return sol;
     }
 
 
-    public Solution getSolution() {
-        return solution;
+
+    @Override
+    public void run()  {
+        Solution s_i = getSolution();
+        float t = t_start;
+        Solution next = null;
+        System.out.println("Running for " + stop_Criteria + " seconds...");
+        long t0 = System.currentTimeMillis();
+        while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
+            next = generateNeighbourhood(neighborhood_function.swap);
+
+            float costCurrent = f(s_i);
+            float costNext = f(next);
+
+            float delta = costCurrent - costNext;
+            if (delta > 0 || p(delta, t)) {
+                s_i = next;
+                s_i.setLaxity(costNext);
+                t = t*alpha;
+            }
+        }
+
+        this.solution = s_i;
     }
 
-    /**
-     * Main algorithm loop
-     */
-    public void run() {
-        /**
-         * SUDO CODE
-         * s_i = inital solution
-         * t = t_start
-         * N = neighborhood of s_i
-         * while not stopping_criteria
-         *      take random s in N
-         *      delta = f(s) - f(s_i)
-         *      if delta > 0 or p(delta, t)
-         *          s_i = s
-         *          t = t * alpha
-     */
-        System.out.println("Not implemented");
+    private boolean p(float delta, float t) {
+        double random = Math.random();
+        return Math.exp(delta / t) > random;
     }
-
-
-
-
-
 }
 
 

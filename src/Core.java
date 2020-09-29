@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Core {
+    static int count = 0;
     final String id;
     final String mcpID;
     final String uid;
@@ -17,18 +18,21 @@ public class Core {
     public Core(String _id, String _mcpID, float _wcetFactor) {
         id = _id;
         mcpID = _mcpID;
-        uid = mcpID + id;
+        uid = String.valueOf(count);
+        count++;
         wcetFactor = _wcetFactor;
         maxPeriod = 0;
     }
 
+    /**
+     * Add a new task to the Core, check if a task with the same ID has already added to the core
+     * @param newTask
+     */
     public void addTask(Task newTask) {
         Iterator<Task> taskIterator = tasks.iterator();
-        while(taskIterator.hasNext())
-        {
+        while (taskIterator.hasNext()) {
             Task currentTask = taskIterator.next();
-            if(currentTask.getId().equals(newTask.getId()))
-            {
+            if (currentTask.getId().equals(newTask.getId())) {
                 throw new RuntimeException("The task with this ID has been already assigned to this core. Please call " +
                         "clearCore function before!");
             }
@@ -36,25 +40,28 @@ public class Core {
         tasks.add(newTask);
     }
 
-    public void removeTask(Task taskToRemove)
-    {
-        if(tasks.remove(taskToRemove) == false)
-        {
+    /**
+     * Remove a task from the Core
+     * @param taskToRemove
+     */
+    public void removeTask(Task taskToRemove) {
+        if (tasks.remove(taskToRemove) == false) {
             throw new RuntimeException("The required task is not contained by the core");
         }
     }
 
+    /**
+     * Add an ArrayList of Tasks to the Core (check if a task with the same ID is already assigned to core
+     * @param newTasks
+     */
     public void addTask(ArrayList<Task> newTasks) {
         Iterator<Task> taskIterator = tasks.iterator();
         Iterator<Task> newTaskIterator = newTasks.iterator();
-        while(taskIterator.hasNext())
-        {
+        while (taskIterator.hasNext()) {
             Task currentTask = taskIterator.next();
-            while(newTaskIterator.hasNext())
-            {
+            while (newTaskIterator.hasNext()) {
                 Task currentNewTask = newTaskIterator.next();
-                if(currentTask.getId().equals(currentNewTask.getId()))
-                {
+                if (currentTask.getId().equals(currentNewTask.getId())) {
                     throw new RuntimeException("The task with this ID has been already assigned to this core. Please call " +
                             "clearCore function before!");
                 }
@@ -63,12 +70,24 @@ public class Core {
         tasks.addAll(newTasks);
     }
 
-    public String getID()
-    {
+    public String getUid() {
+        return uid;
+    }
+
+    public String getId() {
         return id;
     }
 
+    public String getMcpID()
+    {
+        return mcpID;
+    }
+
+    /**
+     * Main task scheduler algorithm
+     */
     public void scheduleTasks() {
+
         reInit();
         Integer clockCounter = 0;
         ArrayList<String> tasksToSchedule = new ArrayList<String>();
@@ -82,20 +101,16 @@ public class Core {
                     if (currentValue == clockCounter) {
                         Task currentTask = getTaskByID(tasks, entry.getKey());
                         if (tasksToSchedule.contains(currentTask) == false) {
-                            System.out.println("ADDED");
                             tasksToSchedule.add(entry.getKey());
                         }
                     }
                 }
             }
-            if (tasksToSchedule.isEmpty() == false) {
+            if (!tasksToSchedule.isEmpty()) {
                 Task highestPriorityTask = getHighestPriority(tasksToSchedule);
                 highestPriorityTask.setExecution_stop(highestPriorityTask.getExecution_stop() + 1);
-                //System.out.println( "HIGHEST"+highestPriorityTask.getId());
-                //System.out.println( "HIGHEST EXECUTION"+highestPriorityTask.getexecutionState());
                 momentSchedule.put(clockCounter, highestPriorityTask.getId());
                 if (highestPriorityTask.getExecution_stop() == Math.ceil((float) highestPriorityTask.getWcet() * wcetFactor)) {
-                    System.out.println("Task finished" + highestPriorityTask.getId());
                     tasksToSchedule.remove(highestPriorityTask.getId());
                     Integer highestWcrt = (int) getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
                     Integer currentWcrt = clockCounter % (getTaskByID(tasks, highestPriorityTask.getId()).getDeadline());
@@ -104,29 +119,39 @@ public class Core {
                     }
                 }
             }
-            System.out.println("Moment:" + clockCounter + "Scheduled");
+//            System.out.println("Moment:" + clockCounter + "Scheduled");
             clockCounter++;
         }
     }
 
+    /**
+     * Get all the tasks assigned to the core
+     * @return
+     */
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Check if the Scheduler method succelfully scheduled the tasks
+     * @return
+     */
     public boolean checkFeasibility() {
         Iterator<Task> taskIterator = tasks.iterator();
-        while(taskIterator.hasNext())
-        {
+        while (taskIterator.hasNext()) {
             Task currentTask = taskIterator.next();
-            System.out.println(currentTask.getWcrt() + "____" +currentTask.getDeadline());
-            if(currentTask.getWcrt() > currentTask.getDeadline() || currentTask.getWcrt() == -1)
-            {
+            System.out.println(currentTask.getWcrt() + "____" + currentTask.getDeadline());
+            if (currentTask.getWcrt() > currentTask.getDeadline() || currentTask.getWcrt() == -1) {
                 return false;
             }
         }
         return true;
     }
 
+    /**
+     * From the tasks assigned to the core find the one with the highest period and returns with its value
+     * @return
+     */
     private Integer getHighestPeriod() {
 
         Integer result = 0;
@@ -140,16 +165,13 @@ public class Core {
         return result;
     }
 
-    /*private void calculatePriorities() {
-        Iterator<Task> tasksIterator = tasks.iterator();
-        while (tasksIterator.hasNext()) {
-
-        }
-    }*/
-
+    /**
+     * Get the highes priority task from the ArrayList of task which is given as an input
+     * @param inputTaskIDs
+     * @return
+     */
     private Task getHighestPriority(ArrayList<String> inputTaskIDs) {
-        if(inputTaskIDs.isEmpty())
-        {
+        if (inputTaskIDs.isEmpty()) {
             throw new RuntimeException("The Arraylist is empty");
         }
         Iterator<String> taskIDIterator = inputTaskIDs.iterator();
@@ -157,22 +179,23 @@ public class Core {
         Task result = null;
         while (taskIDIterator.hasNext()) {
             String currentTask = taskIDIterator.next();
-            if (getTaskByID(tasks,currentTask).getPriority() >= maxPriority) {
-                maxPriority = getTaskByID(tasks,currentTask).getPriority();
-                result = getTaskByID(tasks,currentTask);
+            if (getTaskByID(tasks, currentTask).getPriority() >= maxPriority) {
+                maxPriority = getTaskByID(tasks, currentTask).getPriority();
+                result = getTaskByID(tasks, currentTask);
             }
         }
         return result;
     }
 
-    //Must be called after a new Task has been added to the core
-    private void reInit()
-    {
+    /**
+     * Reinit the variables of the Core
+     * Must be called in the beginning of Scheduling method
+     */
+    private void reInit() {
         taskIDs.clear();
         TaskPeriodsStart.clear();
         momentSchedule.clear();
-        if(getHighestPeriod() > maxPeriod)
-        {
+        if (getHighestPeriod() > maxPeriod) {
             maxPeriod = getHighestPeriod();
         }
         for (int i = 0; i < maxPeriod; i++) {
@@ -200,8 +223,10 @@ public class Core {
         }
     }
 
-    public void clearCore()
-    {
+    /**
+     * Remove all the tasks from the core and clear the other inner variables as well
+     */
+    public void clearCore() {
         tasks.clear();
         taskIDs.clear();
         TaskPeriodsStart.clear();
@@ -209,31 +234,41 @@ public class Core {
         maxPeriod = 0;
     }
 
-    public Task getTaskByID(ArrayList<Task> _tasks, String id)
-    {
+    /**
+     * Returns by the tasks from the input ArrayList of tasks which has the same ID as the input
+     * Throw runtime exception if no Task found with the input id
+     * @param _tasks
+     * @param id
+     * @return
+     */
+    public Task getTaskByID(ArrayList<Task> _tasks, String id) {
         Iterator<Task> taskIterator = _tasks.iterator();
-        while(taskIterator.hasNext())
-        {
+        while (taskIterator.hasNext()) {
             Task currentTask = taskIterator.next();
-            if(currentTask.getId().equals(id))
-            {
+            if (currentTask.getId().equals(id)) {
                 return currentTask;
             }
         }
         throw new RuntimeException("Required task not found");
     }
 
-    public Map<Integer, String> getSchedule()
-    {
+    /**
+     * Returns by a map, where a task is assigned to each time moment of the running
+     * To the moments when the processor is in idle state a null pointer has been assigned
+     * @return
+     */
+    public Map<Integer, String> getSchedule() {
         return momentSchedule;
     }
 
-    public float calculateCostFunction()
-    {
+    /**
+     * Calculate and return by the cost function, call after Scheduling
+     * @return
+     */
+    public float calculateCostFunction() {
         float result = (float) 0.0;
         Iterator<Task> taskIterator = tasks.iterator();
-        while(taskIterator.hasNext())
-        {
+        while (taskIterator.hasNext()) {
             Task currentTask = taskIterator.next();
             float currentWcrt = (float) currentTask.getWcrt();
             float currentDeadline = (float) currentTask.getDeadline();

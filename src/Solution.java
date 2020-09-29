@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Solution {
 
@@ -7,14 +9,30 @@ public class Solution {
 
     public float cost;
     public float mcp;
+    public float avgLaxity;
+
+    public Solution() {}
+
+    public Solution(HashMap<Task, Core> solutionMap, float cost) {
+        this.cost = cost;
+        this.solutionMap = solutionMap;
+    }
 
 
     public void setCost(float cost) {
         this.cost = cost;
     }
 
+    public void setLaxity(float totalCost){
+        int num_tasks = solutionMap.size();
+        avgLaxity = totalCost/num_tasks;
 
 
+    }
+
+    public float getAvgLaxity() {
+        return avgLaxity;
+    }
 
     public void assignTaskToCore(Task task, Core core){
         core.addTask(task);
@@ -27,8 +45,9 @@ public class Solution {
     }
 
 
-    protected Solution clone() throws CloneNotSupportedException{
-        return (Solution) super.clone();
+    protected Solution clone() {
+        HashMap<Task, Core> mapCopy = (HashMap<Task, Core>) this.solutionMap.clone();
+        return new Solution(mapCopy, this.cost);
     }
 
     public ArrayList<SolutionOutput> getSolutionOutput(){
@@ -47,6 +66,10 @@ public class Solution {
 
         }
         return out;
+    }
+
+    public Collection<Core> getCores(){
+        return this.solutionMap.values();
     }
 
 }

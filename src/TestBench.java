@@ -11,11 +11,11 @@ public class TestBench {
         solutionFiles.add(outputPrefix + filename);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         TestBench tb = new TestBench();
-        tb.addTestFile("../data/small.xml");
-        tb.addTestFile("../data/medium.xml");
-        tb.addTestFile("../data/large.xml");
+        tb.addTestFile("data/small.xml");
+        tb.addTestFile("data/medium.xml");
+        tb.addTestFile("data/large.xml");
 
         for (int i = 0; i < tb.testFiles.size(); i++) {
             Scheduler.run(tb.testFiles.get(i), tb.solutionFiles.get(i));
