@@ -71,7 +71,6 @@ public class IOInterface {
             // add laxity
             Element element = document.getDocumentElement();
             Comment comment = document.createComment(" Total Laxity: " + solution.getAvgLaxity());
-            System.out.println(solution.getAvgLaxity());
             element.getParentNode().insertBefore(comment, element);
 
             // create the xml file
