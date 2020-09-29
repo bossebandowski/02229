@@ -6,6 +6,7 @@ public class Core {
     final String mcpID;
     final String uid;
     static Integer maxPeriod = 0; //Has to be shared by all cores
+    boolean feasable;
 
     ArrayList<Task> tasks = new ArrayList<Task>();
     ArrayList<String> taskIDs = new ArrayList<String>();
@@ -22,6 +23,7 @@ public class Core {
         count++;
         wcetFactor = _wcetFactor;
         maxPeriod = 0;
+        feasable = true;
     }
 
     /**
@@ -87,39 +89,48 @@ public class Core {
      * Main task scheduler algorithm
      */
     public void scheduleTasks() {
-
         reInit();
-        Integer clockCounter = 0;
-        ArrayList<String> tasksToSchedule = new ArrayList<String>();
-        while (clockCounter < maxPeriod) {
-            for (Map.Entry<String, ArrayList<Integer>> entry : TaskPeriodsStart.entrySet()) {
-                //System.out.println(entry.getKey());
-                ArrayList<Integer> startingMoments = entry.getValue();
-                for (Integer currentValue : startingMoments) {
-                    if (currentValue.equals(clockCounter)) {
-                        Task currentTask = getTaskByID(tasks, entry.getKey());
-                        if (!tasksToSchedule.contains(currentTask)) {
-                            tasksToSchedule.add(entry.getKey());
-                        }
-                    }
-                }
-            }
+        calculateResponseTime();
+        calculateVCE();
+    }
 
-            if (!tasksToSchedule.isEmpty()) {
-                Task highestPriorityTask = getHighestPriority(tasksToSchedule);
-                highestPriorityTask.setExecution_stop(highestPriorityTask.getExecution_stop() + 1);
-                momentSchedule.put(clockCounter, highestPriorityTask.getId());
-                if (highestPriorityTask.getExecution_stop() == Math.ceil((float) highestPriorityTask.getWcet() * wcetFactor)) {
-                    tasksToSchedule.remove(highestPriorityTask.getId());
-                    int highestWcrt = (int) getTaskByID(tasks, highestPriorityTask.getId()).getWcrt();
-                    int currentWcrt = clockCounter % (getTaskByID(tasks, highestPriorityTask.getId()).getDeadline());
-                    if (highestWcrt <= currentWcrt || highestWcrt == -1) {
-                        getTaskByID(tasks, highestPriorityTask.getId()).setWcrt(currentWcrt);
-                    }
+    public void calculateResponseTime()
+    {
+        Iterator<Task> taskIterator = tasks.iterator();
+        while(taskIterator.hasNext())
+        {
+            Task currentTask = taskIterator.next();
+            Iterator<Task> taskIterator2 = tasks.iterator();
+            float interference = (float) 0.0;
+            while(taskIterator2.hasNext())
+            {
+                Task currentTask2 = taskIterator2.next();
+                if(currentTask2.getPriority() > currentTask.getPriority())
+                {
+                    interference += currentTask2.getWcet();
                 }
             }
-//            System.out.println("Moment:" + clockCounter + "Scheduled");
-            clockCounter++;
+            currentTask.setResponseTime(currentTask.getWcet()+interference);
+        }
+    }
+
+    public void calculateVCE()
+    {
+        Iterator<Task> taskIterator = tasks.iterator();
+        while(taskIterator.hasNext())
+        {
+            Task currentTask = taskIterator.next();
+            Iterator<Task> taskIterator2 = tasks.iterator();
+            float sum = (float) 0.0;
+            while(taskIterator2.hasNext())
+            {
+                Task currentTask2 = taskIterator2.next();
+                if(currentTask2 != currentTask)
+                {
+                    sum += currentTask2.getWcet()*(currentTask.getResponseTime()/currentTask2.getPeriod());
+                }
+            }
+            currentTask.setWcrt(currentTask.getWcet() + sum);
         }
     }
 
@@ -271,7 +282,11 @@ public class Core {
             Task currentTask = taskIterator.next();
             float currentWcrt = currentTask.getWcrt();
             float currentDeadline = (float) currentTask.getDeadline();
-            result += Math.abs(currentDeadline - currentWcrt);
+            if(currentWcrt >currentDeadline)
+            {
+                feasable = false;
+            }
+            result += currentDeadline - currentWcrt;
         }
         return result;
     }

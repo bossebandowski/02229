@@ -11,6 +11,8 @@ public class Task {
     final int period;
     private float priority;
     final int wcet;
+    float interference;
+    float responseTime;
 
 
 
@@ -25,6 +27,7 @@ public class Task {
         deadline = ddline;
         period = period1;
         wcet = wcet1;
+        interference = (float) 0.0;
 
         setPriority();
 
@@ -61,6 +64,10 @@ public class Task {
         this.wcrt = wcrt;
     }
 
+    public void setInterference(float newValue){interference = newValue;}
+
+    public void setResponseTime(float newValue){responseTime = newValue;}
+
     public float getLaxity() {
         return laxity;
     }
@@ -88,6 +95,11 @@ public class Task {
     public int getWcet() {
         return wcet;
     }
+
+    public float getInterference(){return  interference;}
+
+    public  float getResponseTime(){return  responseTime;}
+
 
     @Override
     public String toString() {
