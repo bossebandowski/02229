@@ -205,12 +205,20 @@ public class SA implements MetaHeuristic{
                 next = generateNeighbourhood(neighborhood_function.move, s_i);
             }
 
-            float delta = f(s_i) - f(next);
+            float costCurrent = f(s_i);
+            float costNext = f(next);
+
+            float delta = costCurrent - costNext;
             if (delta > 0 || p(delta, t)) {
                 s_i = next;
+                s_i.setLaxity(costNext);
+                t = t*alpha;
+
             }
             t = t*alpha;
         }
+
+        this.solution = s_i;
     }
 
     private boolean p(float delta, float t) {

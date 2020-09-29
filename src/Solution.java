@@ -9,6 +9,7 @@ public class Solution {
 
     public float cost;
     public float mcp;
+    public float avgLaxity;
 
     public Solution() {}
 
@@ -22,8 +23,16 @@ public class Solution {
         this.cost = cost;
     }
 
+    public void setLaxity(float totalCost){
+        int num_tasks = solutionMap.size();
+        avgLaxity = totalCost/num_tasks;
 
 
+    }
+
+    public float getAvgLaxity() {
+        return avgLaxity;
+    }
 
     public void assignTaskToCore(Task task, Core core){
         core.addTask(task);
