@@ -11,12 +11,6 @@ public class Task {
     final int period;
     private float priority;
     final int wcet;
-    float interference;
-    float responseTime;
-
-
-
-    private int execution_stop;
     private float wcrt;
     private float laxity;
 
@@ -27,7 +21,6 @@ public class Task {
         deadline = ddline;
         period = period1;
         wcet = wcet1;
-        interference = (float) 0.0;
 
         setPriority();
 
@@ -48,14 +41,6 @@ public class Task {
         priorities.add(priority);
     }
 
-    public int getExecution_stop() {
-        return execution_stop;
-    }
-
-    public void setExecution_stop(int execution_stop) {
-        this.execution_stop = execution_stop;
-    }
-
     public float getWcrt() {
         return wcrt;
     }
@@ -64,13 +49,7 @@ public class Task {
         this.wcrt = wcrt;
     }
 
-    public void setInterference(float newValue){interference = newValue;}
-
-    public void setResponseTime(float newValue){responseTime = newValue;}
-
-    public float getLaxity() {
-        return laxity;
-    }
+    public float getLaxity() { return laxity; }
 
     public void setLaxity(float laxity) {
         this.laxity = laxity;
@@ -95,10 +74,6 @@ public class Task {
     public int getWcet() {
         return wcet;
     }
-
-    public float getInterference(){return  interference;}
-
-    public  float getResponseTime(){return  responseTime;}
 
 
     @Override
