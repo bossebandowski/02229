@@ -4,7 +4,6 @@ import java.util.Random;
 
 enum neighborhood_function{
     swap,
-    three_opt,
     move;
 }
 
@@ -33,33 +32,51 @@ public class SA implements MetaHeuristic{
     }
 
 
-    public Solution generateNeighbourhood(neighborhood_function neighborhood)  {
+    public Solution generateNeighbourhood(neighborhood_function neighborhood, Solution currentSolution)  {
         ArrayList<Core> cores = this.platform.getCores();
-        Solution current_solution = getSolution();
-        Solution new_solution = current_solution.clone();
+        Solution new_solution = currentSolution.clone();
         switch (neighborhood){
             case swap:
+                // get a random core from the list
                 String core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                String core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                Core core1 = platform.getCoreById(core1_id);
 
-                while (core1_id.equals(core2_id)){
-                    core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                // check if the core has any tasks assigned to it. If not, get a new one
+                while (core1.getTasks().size() == 0) {
+                    core1_id = String.valueOf(new Random().nextInt(cores.size()));
+                    core1 = platform.getCoreById(core1_id);
                 }
 
-                Core core1 = platform.getCoreById(core1_id);
+                // check if the core has all tasks assigned to it. If yes, then return current solution
+                if (core1.getTasks().size() == Task.priorities.size()) {
+                    return currentSolution;
+                }
+
+                // get second core to swap tasks with
+                String core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 Core core2 = platform.getCoreById(core2_id);
 
+                // if second core is the same as first core or it has no tasks assigned to it, then get new second core
+                while (core1_id.equals(core2_id) || core2.getTasks().size() == 0){
+                    core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                    core2 = platform.getCoreById(core2_id);
+                }
+
+                // choose random tasks from both cores
                 Task task1 = getRandomTask(core1);
                 Task task2 = getRandomTask(core2);
 
                 new_solution.changeCore(task1,core2,core1);
                 new_solution.changeCore(task2,core1,core2);
 
-            case three_opt:
-                break;
             case move:
                 core1_id = String.valueOf(new Random().nextInt(cores.size()));
                 core1 = platform.getCoreById(core1_id);
+                while (core1.getTasks().size() == 0) {
+                    core1_id = String.valueOf(new Random().nextInt(cores.size()));
+                    core1 = platform.getCoreById(core1_id);
+                }
+
                 Task task = getRandomTask(core1);
                 core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 while (core1_id.equals(core2_id)){
@@ -73,12 +90,13 @@ public class SA implements MetaHeuristic{
         };
         return new_solution;
     }
+
     public Task getRandomTask(Core core) {
         ArrayList<Task> tasks =  core.getTasks();
         int rnd = new Random().nextInt(tasks.size());
         return tasks.get(rnd);
     }
-    
+
     public Solution getSolution() {
         return solution;
     }
@@ -174,19 +192,19 @@ public class SA implements MetaHeuristic{
     public void run() {
         Solution s_i = getSolution();
         float t = t_start;
-        Solution next = null;
+        Solution next;
         System.out.println("Running for " + stop_Criteria + " seconds...");
         long t0 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
-             if (Math.random() < 0.5) {
-                next = generateNeighbourhood(neighborhood_function.swap);
+            if (Math.random() < 0.5) {
+                next = generateNeighbourhood(neighborhood_function.swap, s_i);
             } else {
-                next = generateNeighbourhood(neighborhood_function.move);
+                next = generateNeighbourhood(neighborhood_function.move, s_i);
             }
             float costCurrent = f(s_i);
             float costNext = f(next);
-            float delta = f(s_i) - f(next);
-            System.out.println(p(delta, t));
+
+            float delta = costCurrent - costNext;
             if (delta > 0 || p(delta, t)) {
                 s_i = next;
                 s_i.setLaxity(costNext);

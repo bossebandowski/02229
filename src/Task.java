@@ -11,10 +11,6 @@ public class Task {
     final int period;
     private float priority;
     final int wcet;
-
-
-
-    private int execution_stop;
     private float wcrt;
     private float laxity;
 
@@ -45,14 +41,6 @@ public class Task {
         priorities.add(priority);
     }
 
-    public int getExecution_stop() {
-        return execution_stop;
-    }
-
-    public void setExecution_stop(int execution_stop) {
-        this.execution_stop = execution_stop;
-    }
-
     public float getWcrt() {
         return wcrt;
     }
@@ -61,9 +49,7 @@ public class Task {
         this.wcrt = wcrt;
     }
 
-    public float getLaxity() {
-        return laxity;
-    }
+    public float getLaxity() { return laxity; }
 
     public void setLaxity(float laxity) {
         this.laxity = laxity;
@@ -88,6 +74,7 @@ public class Task {
     public int getWcet() {
         return wcet;
     }
+
 
     @Override
     public String toString() {
