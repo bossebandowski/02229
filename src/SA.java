@@ -110,7 +110,13 @@ public class SA implements MetaHeuristic{
         while (i.hasNext()) {
             c = i.next();
             c.scheduleTasks();
+
             total_cost += c.calculateCostFunction();
+
+            // punish for unfeasible
+            if (!c.feasible) {
+                total_cost = (float) (total_cost * 1.5);
+            }
 
         }
         return total_cost;
