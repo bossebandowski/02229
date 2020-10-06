@@ -1,6 +1,7 @@
 import java.util.*;
 import java.lang.Math;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 enum neighborhood_function{
     swap,
@@ -115,7 +116,7 @@ public class SA implements MetaHeuristic{
 
             // punish for unfeasible
             if (!c.feasible) {
-                total_cost = (float) (total_cost * 1.5);
+                total_cost = (float) (total_cost * 0.5);
             }
 
         }
@@ -197,11 +198,20 @@ public class SA implements MetaHeuristic{
     @Override
     public void run() {
         Solution s_i = getSolution();
+        Solution si2 = s_i.clone();
         float t = t_start;
         Solution next;
         System.out.println("Running for " + stop_Criteria + " seconds...");
         long t0 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
+            try
+            {
+                Thread.sleep(500);
+            }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
             if (Math.random() < 0.5) {
                 next = generateNeighbourhood(neighborhood_function.swap, s_i);
             } else {
@@ -209,13 +219,13 @@ public class SA implements MetaHeuristic{
             }
             float costCurrent = f(s_i);
             float costNext = f(next);
-
-            float delta = costCurrent - costNext;
+            System.out.println("current: " +costCurrent);
+            System.out.println("next: " +costNext);
+            float delta = costNext - costCurrent;
             if (delta > 0 || p(delta, t)) {
-                s_i = next;
-                s_i.setLaxity(costNext);
-                t = t*alpha;
+                System.out.println("returned true.... temp is " + t);
 
+                //s_i = next;
             }
             t = t*alpha;
         }
@@ -225,7 +235,7 @@ public class SA implements MetaHeuristic{
 
     private boolean p(float delta, float t) {
         double random = Math.random();
-        return Math.exp(delta / t) > random;
+        return Math.exp(Math.abs(delta) / t) < random;
     }
 }
 
