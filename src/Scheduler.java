@@ -8,7 +8,7 @@ public class Scheduler {
 
     static float alpha = 0.99f;
     static float t_start = 100;
-    static float runtime_s = 10f;
+    static float runtime_s = 60f;
 
 
     public Scheduler(MetaHeuristic strategy, Platform platform1, ArrayList<Task> tasks) {
