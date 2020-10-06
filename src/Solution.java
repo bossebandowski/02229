@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Solution {
 
@@ -18,6 +16,16 @@ public class Solution {
         this.solutionMap = solutionMap;
     }
 
+    public ArrayList<Task> getCoreTasks(Core core){
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        for (Map.Entry<Task, Core> entry : this.solutionMap.entrySet()) {
+            if (entry.getValue().equals(core)) {
+                tasks.add(entry.getKey());
+            }
+        }
+        return tasks;
+    }
+
 
     public void setCost(float cost) {
         this.cost = cost;
@@ -26,8 +34,6 @@ public class Solution {
     public void setLaxity(float totalCost){
         int num_tasks = solutionMap.size();
         avgLaxity = totalCost/num_tasks;
-
-
     }
 
     public float getAvgLaxity() {
@@ -35,12 +41,12 @@ public class Solution {
     }
 
     public void assignTaskToCore(Task task, Core core){
-        core.addTask(task);
+        //core.addTask(task);
         solutionMap.put(task,core);
 
     }
     public void changeCore(Task task, Core newCore, Core oldCore){
-        oldCore.removeTask(task);
+        //oldCore.removeTask(task);
         assignTaskToCore(task,newCore);
     }
 

@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.Math;
 import java.util.Random;
@@ -34,56 +35,53 @@ public class SA implements MetaHeuristic{
 
 
     public Solution generateNeighbourhood(neighborhood_function neighborhood, Solution currentSolution)  {
-        ArrayList<Core> cores = this.platform.getCores();
+        ArrayList<Core> cores = (ArrayList<Core>) currentSolution.getCores();
+        //ArrayList<Core> cores = this.platform.getCores();
         Solution new_solution = currentSolution.clone();
         switch (neighborhood){
             case swap:
                 // get a random core from the list
                 String core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                Core core1 = platform.getCoreById(core1_id);
+                Core core1 = cores.get(Integer.parseInt(core1_id));
 
-                // check if the core has any tasks assigned to it. If not, get a new one
-                while (core1.getTasks().size() == 0) {
-                    core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                    core1 = platform.getCoreById(core1_id);
-                }
 
+                // new implementation
                 // check if the core has all tasks assigned to it. If yes, then return current solution
-                if (core1.getTasks().size() == Task.priorities.size()) {
+                if (new_solution.getCoreTasks(core1).size() == Task.priorities.size()) {
                     return currentSolution;
                 }
 
                 // get second core to swap tasks with
                 String core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                Core core2 = platform.getCoreById(core2_id);
+                Core core2 = cores.get(Integer.parseInt(core2_id));
 
                 // if second core is the same as first core or it has no tasks assigned to it, then get new second core
-                while (core1_id.equals(core2_id) || core2.getTasks().size() == 0){
+                while (core1_id.equals(core2_id) || new_solution.getCoreTasks(core2).size() == 0){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                    core2 = platform.getCoreById(core2_id);
+                    core2 = cores.get(Integer.parseInt(core2_id));
                 }
 
                 // choose random tasks from both cores
-                Task task1 = getRandomTask(core1);
-                Task task2 = getRandomTask(core2);
+                Task task1 = getRandomTask(new_solution, core1);
+                Task task2 = getRandomTask(new_solution, core2);
 
                 new_solution.changeCore(task1,core2,core1);
                 new_solution.changeCore(task2,core1,core2);
 
             case move:
                 core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                core1 = platform.getCoreById(core1_id);
-                while (core1.getTasks().size() == 0) {
+                core1 = cores.get(Integer.parseInt(core1_id));
+                while (new_solution.getCoreTasks(core1).size() == 0) {
                     core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                    core1 = platform.getCoreById(core1_id);
+                    core1 = cores.get(Integer.parseInt(core1_id));
                 }
 
-                Task task = getRandomTask(core1);
+                Task task = getRandomTask(new_solution, core1);
                 core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 while (core1_id.equals(core2_id)){
                     core2_id = String.valueOf(new Random().nextInt(cores.size()));
                 };
-                core2 = platform.getCoreById(core2_id);
+                core2 = cores.get(Integer.parseInt(core2_id));
                 new_solution.changeCore(task,core2,core1);
 
 
@@ -92,8 +90,8 @@ public class SA implements MetaHeuristic{
         return new_solution;
     }
 
-    public Task getRandomTask(Core core) {
-        ArrayList<Task> tasks =  core.getTasks();
+    public Task getRandomTask(Solution solution, Core core) {
+        ArrayList<Task> tasks =  solution.getCoreTasks(core);
         int rnd = new Random().nextInt(tasks.size());
         return tasks.get(rnd);
     }

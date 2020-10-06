@@ -7,7 +7,7 @@ public class Core {
     final String mcpID;
     final String uid;
     boolean feasible;
-    ArrayList<Task> tasks = new ArrayList<Task>();
+    // ArrayList<Task> tasks = new ArrayList<Task>();
     final float wcetFactor;
     ArrayList<Task> unfeasibleTasks = new ArrayList<Task>();
 
