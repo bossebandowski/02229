@@ -35,15 +35,23 @@ public class SA implements MetaHeuristic{
 
 
     public Solution generateNeighbourhood(neighborhood_function neighborhood, Solution currentSolution)  {
-        ArrayList<Core> cores = (ArrayList<Core>) currentSolution.getCores();
+        ArrayList<Core> cores = new ArrayList<>(currentSolution.getCores());
+
+
         //ArrayList<Core> cores = this.platform.getCores();
         Solution new_solution = currentSolution.clone();
+        int maxCoreId = new_solution.getMaxCoreID();
         switch (neighborhood){
             case swap:
-                // get a random core from the list
-                String core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                Core core1 = cores.get(Integer.parseInt(core1_id));
 
+                // get a random core from the list
+                String core1_id = String.valueOf(new Random().nextInt(maxCoreId));
+                Core core1 = new_solution.getCoreById(core1_id);
+
+                while (new_solution.getCoreTasks(core1).size() == 0){
+                    core1_id = String.valueOf(new Random().nextInt(maxCoreId));
+                    core1 = new_solution.getCoreById(core1_id);
+                }
 
                 // new implementation
                 // check if the core has all tasks assigned to it. If yes, then return current solution
@@ -52,46 +60,54 @@ public class SA implements MetaHeuristic{
                 }
 
                 // get second core to swap tasks with
-                String core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                Core core2 = cores.get(Integer.parseInt(core2_id));
+                String core2_id = String.valueOf(new Random().nextInt(maxCoreId));
+                Core core2 = new_solution.getCoreById(core2_id);
 
                 // if second core is the same as first core or it has no tasks assigned to it, then get new second core
+
                 while (core1_id.equals(core2_id) || new_solution.getCoreTasks(core2).size() == 0){
-                    core2_id = String.valueOf(new Random().nextInt(cores.size()));
-                    core2 = cores.get(Integer.parseInt(core2_id));
+                    core2_id = String.valueOf(new Random().nextInt(maxCoreId));
+                    core2 = new_solution.getCoreById(core2_id);
                 }
 
-                // choose random tasks from both cores
+                // choose random tasks from both coresv
                 Task task1 = getRandomTask(new_solution, core1);
                 Task task2 = getRandomTask(new_solution, core2);
 
                 new_solution.changeCore(task1,core2,core1);
                 new_solution.changeCore(task2,core1,core2);
 
+                break;
+
             case move:
-                core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                core1 = cores.get(Integer.parseInt(core1_id));
-                while (new_solution.getCoreTasks(core1).size() == 0) {
-                    core1_id = String.valueOf(new Random().nextInt(cores.size()));
-                    core1 = cores.get(Integer.parseInt(core1_id));
+
+                core1_id = String.valueOf(new Random().nextInt(maxCoreId));
+                core1 = new_solution.getCoreById(core1_id);
+
+                while (new_solution.getCoreTasks(core1).size() == 0  ) {
+                    core1_id = String.valueOf(new Random().nextInt(maxCoreId));
+                    core1 = new_solution.getCoreById(core1_id);
                 }
 
                 Task task = getRandomTask(new_solution, core1);
-                core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                core2_id = String.valueOf(new Random().nextInt(maxCoreId));
                 while (core1_id.equals(core2_id)){
-                    core2_id = String.valueOf(new Random().nextInt(cores.size()));
+                    core2_id = String.valueOf(new Random().nextInt(maxCoreId));
                 };
-                core2 = cores.get(Integer.parseInt(core2_id));
+                core2 = new_solution.getCoreById(core2_id);
                 new_solution.changeCore(task,core2,core1);
 
-
+                break;
 
         };
         return new_solution;
     }
 
     public Task getRandomTask(Solution solution, Core core) {
+
+
         ArrayList<Task> tasks =  solution.getCoreTasks(core);
+        System.out.println(tasks.size());
         int rnd = new Random().nextInt(tasks.size());
         return tasks.get(rnd);
     }
@@ -101,6 +117,7 @@ public class SA implements MetaHeuristic{
     }
 
     public float f(Solution s) {
+
         Collection<Core> cores = s.getCores();
         Iterator<Core> i = cores.iterator();
         Core c;
@@ -108,9 +125,9 @@ public class SA implements MetaHeuristic{
         float total_cost = 0f;
         while (i.hasNext()) {
             c = i.next();
-            c.scheduleTasks();
+            c.scheduleTasks(s.getCoreTasks(c));
 
-            total_cost += c.calculateCostFunction();
+            total_cost += c.calculateCostFunction(s.getCoreTasks(c));
 
             // punish for unfeasible
             if (!c.feasible) {
@@ -199,20 +216,23 @@ public class SA implements MetaHeuristic{
         Solution si2 = s_i.clone();
         float t = t_start;
         Solution next;
-        System.out.println("Running for " + stop_Criteria + " seconds...");
+
         long t0 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
             try
             {
-                Thread.sleep(500);
+                Thread.sleep(800);
             }
             catch(InterruptedException ex)
             {
                 Thread.currentThread().interrupt();
             }
+
             if (Math.random() < 0.5) {
+
                 next = generateNeighbourhood(neighborhood_function.swap, s_i);
             } else {
+
                 next = generateNeighbourhood(neighborhood_function.move, s_i);
             }
             float costCurrent = f(s_i);
@@ -220,15 +240,16 @@ public class SA implements MetaHeuristic{
             System.out.println("current: " +costCurrent);
             System.out.println("next: " +costNext);
             float delta = costNext - costCurrent;
+
             if (delta > 0 || p(delta, t)) {
                 System.out.println("returned true.... temp is " + t);
-
-                //s_i = next;
+                s_i = next;
             }
             t = t*alpha;
         }
 
         this.solution = s_i;
+        this.solution.setLaxity();
     }
 
     private boolean p(float delta, float t) {

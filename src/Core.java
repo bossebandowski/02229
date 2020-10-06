@@ -10,6 +10,7 @@ public class Core {
     final float wcetFactor;
 
     public Core(String _id, String _mcpID, float _wcetFactor) {
+        System.out.println(_id);
         id = _id;
         mcpID = _mcpID;
         uid = String.valueOf(count);
@@ -135,6 +136,7 @@ public class Core {
      * @return
      */
     public float calculateCostFunction(ArrayList<Task> tasks) {
+        feasible = true;
         float result = (float) 0.0;
         Iterator<Task> taskIterator = tasks.iterator();
         while (taskIterator.hasNext()) {

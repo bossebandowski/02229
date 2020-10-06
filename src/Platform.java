@@ -21,19 +21,19 @@ public class Platform {
         return null;
     }
 
-    public void AssignTasks(String coreID, ArrayList<Task> tasks)
-    {
-        Iterator<Core> coreIterator = cores.iterator();
-        while(coreIterator.hasNext())
-        {
-            Core currentCore = coreIterator.next();
-            if(currentCore.getId().equals(coreID))
-            {
-                currentCore.addTask(tasks);
-
-            }
-        }
-    }
+//    public void AssignTasks(String coreID, ArrayList<Task> tasks)
+//    {
+//        Iterator<Core> coreIterator = cores.iterator();
+//        while(coreIterator.hasNext())
+//        {
+//            Core currentCore = coreIterator.next();
+//            if(currentCore.getId().equals(coreID))
+//            {
+//                currentCore.addTask(tasks);
+//
+//            }
+//        }
+//    }
 
     /**
      * Return by an ArrayList of the cores

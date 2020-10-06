@@ -17,10 +17,15 @@ public class Solution {
     }
 
     public ArrayList<Task> getCoreTasks(Core core){
+
         ArrayList<Task> tasks = new ArrayList<Task>();
         for (Map.Entry<Task, Core> entry : this.solutionMap.entrySet()) {
-            if (entry.getValue().equals(core)) {
-                tasks.add(entry.getKey());
+            try {
+                if (entry.getValue().equals(core)) {
+                    tasks.add(entry.getKey());
+                }
+            } catch (NullPointerException e){
+                return tasks;
             }
         }
         return tasks;
@@ -31,9 +36,21 @@ public class Solution {
         this.cost = cost;
     }
 
-    public void setLaxity(float totalCost){
+    public void setLaxity(){
         int num_tasks = solutionMap.size();
-        avgLaxity = totalCost/num_tasks;
+        float totalLaxity = 0;
+        Collection<Core> cores = getCores();
+        Iterator<Core> i = cores.iterator();
+        Core c;
+
+        while (i.hasNext()) {
+            c = i.next();
+
+
+            totalLaxity += c.calculateCostFunction(getCoreTasks(c));
+        }
+
+        avgLaxity = totalLaxity/num_tasks;
     }
 
     public float getAvgLaxity() {
@@ -42,6 +59,8 @@ public class Solution {
 
     public void assignTaskToCore(Task task, Core core){
         //core.addTask(task);
+
+
         solutionMap.put(task,core);
 
     }
@@ -77,6 +96,40 @@ public class Solution {
     public Collection<Core> getCores(){
         return this.solutionMap.values();
     }
+
+    public Core getCoreById(String coreId) {
+
+        Collection<Core> cores = getCores();
+        Iterator<Core> i = cores.iterator();
+        Core c;
+
+        while (i.hasNext()) {
+            c = i.next();
+
+
+            if (c.getId().equals(coreId)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public int getMaxCoreID() {
+        int maxId = 0;
+        Collection<Core> cores = getCores();
+        Iterator<Core> i = cores.iterator();
+        Core c;
+
+        while (i.hasNext()) {
+            c = i.next();
+
+            if (Integer.parseInt(c.getId()) > maxId){
+                maxId = Integer.parseInt(c.getId());
+            }
+        }
+        return maxId;
+    }
+
 
 }
 
