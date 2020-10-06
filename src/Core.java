@@ -7,9 +7,7 @@ public class Core {
     final String mcpID;
     final String uid;
     boolean feasible;
-    // ArrayList<Task> tasks = new ArrayList<Task>();
     final float wcetFactor;
-    ArrayList<Task> unfeasibleTasks = new ArrayList<Task>();
 
     public Core(String _id, String _mcpID, float _wcetFactor) {
         id = _id;
@@ -20,51 +18,6 @@ public class Core {
         feasible = true;
     }
 
-    /**
-     * Add a new task to the Core, check if a task with the same ID has already added to the core
-     * @param newTask
-     */
-    public void addTask(Task newTask) {
-        Iterator<Task> taskIterator = tasks.iterator();
-        while (taskIterator.hasNext()) {
-            Task currentTask = taskIterator.next();
-            if (currentTask.getId().equals(newTask.getId())) {
-                throw new RuntimeException("The task with this ID has been already assigned to this core. Please call " +
-                        "clearCore function before!");
-            }
-        }
-        tasks.add(newTask);
-    }
-
-    /**
-     * Remove a task from the Core
-     * @param taskToRemove
-     */
-    public void removeTask(Task taskToRemove) {
-        if (tasks.remove(taskToRemove) == false) {
-            throw new RuntimeException("The required task is not contained by the core");
-        }
-    }
-
-    /**
-     * Add an ArrayList of Tasks to the Core (check if a task with the same ID is already assigned to core
-     * @param newTasks
-     */
-    public void addTask(ArrayList<Task> newTasks) {
-        Iterator<Task> taskIterator = tasks.iterator();
-        Iterator<Task> newTaskIterator = newTasks.iterator();
-        while (taskIterator.hasNext()) {
-            Task currentTask = taskIterator.next();
-            while (newTaskIterator.hasNext()) {
-                Task currentNewTask = newTaskIterator.next();
-                if (currentTask.getId().equals(currentNewTask.getId())) {
-                    throw new RuntimeException("The task with this ID has been already assigned to this core. Please call " +
-                            "clearCore function before!");
-                }
-            }
-        }
-        tasks.addAll(newTasks);
-    }
 
     public String getUid() {
         return uid;
@@ -80,19 +33,10 @@ public class Core {
     }
 
     /**
-     * Get all the tasks assigned to the core
-     * @return
-     */
-    public ArrayList<Task> getTasks() {
-        return tasks;
-    }
-
-    /**
      * Main task scheduler algorithm
      */
-    public void scheduleTasks() {
-        //calculateResponseTime();
-        calculateVCRT();
+    public void scheduleTasks(ArrayList<Task>tasks) {
+        calculateVCRT(tasks);
     }
 
     /*public void calculateResponseTime()
@@ -118,9 +62,9 @@ public class Core {
     /**
      * Calculate the Worst-case Response time for each tasks
      */
-    public void calculateVCRT()
+    public void calculateVCRT(ArrayList<Task>tasks)
     {
-       ArrayList<Task> prioritySequence = prioritySequence(tasks);
+        ArrayList<Task> prioritySequence = prioritySequence(tasks);
         Iterator<Task> prioritySequenceIterator = prioritySequence.iterator();
         while(prioritySequenceIterator.hasNext() == true)
         {
@@ -185,37 +129,12 @@ public class Core {
         return outputArray;
     }
 
-    /**
-     * Remove all the tasks from the core and clear the other inner variables as well
-     */
-    public void clearCore() {
-        tasks.clear();
-    }
-
-    /**
-     * Returns by the tasks from the input ArrayList of tasks which has the same ID as the input
-     * Throw runtime exception if no Task found with the input id
-     * @param _tasks
-     * @param id
-     * @return
-     */
-    public Task getTaskByID(ArrayList<Task> _tasks, String id) {
-        Iterator<Task> taskIterator = _tasks.iterator();
-        while (taskIterator.hasNext()) {
-            Task currentTask = taskIterator.next();
-            if (currentTask.getId().equals(id)) {
-                return currentTask;
-            }
-        }
-        throw new RuntimeException("Required task not found in the ArrayList");
-    }
 
     /**
      * Calculate and return by the cost function, call after Scheduling
      * @return
      */
-    public float calculateCostFunction() {
-        unfeasibleTasks.clear();
+    public float calculateCostFunction(ArrayList<Task> tasks) {
         float result = (float) 0.0;
         Iterator<Task> taskIterator = tasks.iterator();
         while (taskIterator.hasNext()) {
@@ -224,7 +143,6 @@ public class Core {
             float currentDeadline = (float) currentTask.getDeadline();
             if(currentWcrt > currentDeadline)
             {
-                unfeasibleTasks.add(currentTask);
                 feasible = false;
             }
             result += currentDeadline - currentWcrt;
@@ -237,8 +155,4 @@ public class Core {
         return feasible;
     }
 
-    public ArrayList<Task> getUnfeasibleTasks()
-    {
-        return unfeasibleTasks;
-    }
 }
