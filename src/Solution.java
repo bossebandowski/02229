@@ -18,16 +18,15 @@ public class Solution {
 
     public ArrayList<Task> getCoreTasks(Core core){
 
-        ArrayList<Task> tasks = new ArrayList<Task>();
+        ArrayList<Task> tasks = new ArrayList<>();
         for (Map.Entry<Task, Core> entry : this.solutionMap.entrySet()) {
-            try {
-                if (entry.getValue().equals(core)) {
-                    tasks.add(entry.getKey());
-                }
-            } catch (NullPointerException e){
-                return tasks;
+            String entryId = entry.getValue().getId();
+            String coreId = core.getId();
+            if (entry.getValue().getId().equals(core.getId())) {
+                tasks.add(entry.getKey());
             }
         }
+
         return tasks;
     }
 
@@ -58,14 +57,16 @@ public class Solution {
     }
 
     public void assignTaskToCore(Task task, Core core){
-        //core.addTask(task);
+
 
 
         solutionMap.put(task,core);
 
+
+
     }
-    public void changeCore(Task task, Core newCore, Core oldCore){
-        //oldCore.removeTask(task);
+    public void changeCore(Task task, Core newCore){
+
         assignTaskToCore(task,newCore);
     }
 
@@ -97,6 +98,42 @@ public class Solution {
         return this.solutionMap.values();
     }
 
+    public Set<String> getMappedCoreIds(){
+        Set<String> setIds = new HashSet<>();
+        for (Core core : this.solutionMap.values() ){
+            setIds.add(core.getId());
+        }
+
+        return setIds ;
+    }
+
+    public Core getRandomCoreFromMap(Set<String> CoreIds){
+        int numOfIds = CoreIds.size();
+        if (numOfIds == 1) {
+            Object[] values = solutionMap.values().toArray();
+            return (Core) values[0];
+        }
+        int rnd_index = new Random().nextInt(numOfIds);
+        String[] array = CoreIds.toArray( new String[numOfIds] );
+
+        Core core = getCoreById(array[rnd_index]);
+
+        return core;
+    }
+
+    //method invoked when looking for second core
+    public Core getRandomCoreFromMap(Core exceptCore){
+
+        Set<String> setIds = getMappedCoreIds();
+
+        setIds.remove(exceptCore.getId());
+
+
+        Core core =  getRandomCoreFromMap(setIds);
+        return core;
+
+    }
+
     public Core getCoreById(String coreId) {
 
         Collection<Core> cores = getCores();
@@ -114,21 +151,7 @@ public class Solution {
         return null;
     }
 
-    public int getMaxCoreID() {
-        int maxId = 0;
-        Collection<Core> cores = getCores();
-        Iterator<Core> i = cores.iterator();
-        Core c;
 
-        while (i.hasNext()) {
-            c = i.next();
-
-            if (Integer.parseInt(c.getId()) > maxId){
-                maxId = Integer.parseInt(c.getId());
-            }
-        }
-        return maxId;
-    }
 
 
 }

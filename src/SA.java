@@ -35,67 +35,48 @@ public class SA implements MetaHeuristic{
 
 
     public Solution generateNeighbourhood(neighborhood_function neighborhood, Solution currentSolution)  {
-        ArrayList<Core> cores = new ArrayList<>(currentSolution.getCores());
 
 
-        //ArrayList<Core> cores = this.platform.getCores();
         Solution new_solution = currentSolution.clone();
-        int maxCoreId = new_solution.getMaxCoreID();
+        int maxCoreId = platform.getMaxCoreID();
         switch (neighborhood){
             case swap:
+                // get a random core from map
+                Core core1 = new_solution.getRandomCoreFromMap(new_solution.getMappedCoreIds());
 
-                // get a random core from the list
-                String core1_id = String.valueOf(new Random().nextInt(maxCoreId));
-                Core core1 = new_solution.getCoreById(core1_id);
-
-                while (new_solution.getCoreTasks(core1).size() == 0){
-                    core1_id = String.valueOf(new Random().nextInt(maxCoreId));
-                    core1 = new_solution.getCoreById(core1_id);
-                }
 
                 // new implementation
                 // check if the core has all tasks assigned to it. If yes, then return current solution
+
                 if (new_solution.getCoreTasks(core1).size() == Task.priorities.size()) {
                     return currentSolution;
                 }
-
                 // get second core to swap tasks with
-                String core2_id = String.valueOf(new Random().nextInt(maxCoreId));
-                Core core2 = new_solution.getCoreById(core2_id);
-
-                // if second core is the same as first core or it has no tasks assigned to it, then get new second core
-
-                while (core1_id.equals(core2_id) || new_solution.getCoreTasks(core2).size() == 0){
-                    core2_id = String.valueOf(new Random().nextInt(maxCoreId));
-                    core2 = new_solution.getCoreById(core2_id);
-                }
+                Core core2 = new_solution.getRandomCoreFromMap(core1);
 
                 // choose random tasks from both coresv
                 Task task1 = getRandomTask(new_solution, core1);
                 Task task2 = getRandomTask(new_solution, core2);
 
-                new_solution.changeCore(task1,core2,core1);
-                new_solution.changeCore(task2,core1,core2);
+                new_solution.changeCore(task1,core2);
+                new_solution.changeCore(task2,core1);
 
                 break;
 
             case move:
 
-                core1_id = String.valueOf(new Random().nextInt(maxCoreId));
-                core1 = new_solution.getCoreById(core1_id);
+                Core coreFrom = new_solution.getRandomCoreFromMap(new_solution.getMappedCoreIds());
 
-                while (new_solution.getCoreTasks(core1).size() == 0  ) {
-                    core1_id = String.valueOf(new Random().nextInt(maxCoreId));
-                    core1 = new_solution.getCoreById(core1_id);
-                }
-
-                Task task = getRandomTask(new_solution, core1);
-                core2_id = String.valueOf(new Random().nextInt(maxCoreId));
-                while (core1_id.equals(core2_id)){
+                Task task = getRandomTask(new_solution, coreFrom);
+                String core2_id = String.valueOf(new Random().nextInt(maxCoreId));
+                while (coreFrom.getId().equals(core2_id)){
                     core2_id = String.valueOf(new Random().nextInt(maxCoreId));
                 };
-                core2 = new_solution.getCoreById(core2_id);
-                new_solution.changeCore(task,core2,core1);
+
+
+                core2 = platform.getCoreById(core2_id);
+
+                new_solution.changeCore(task,core2);
 
                 break;
 
@@ -104,10 +85,8 @@ public class SA implements MetaHeuristic{
     }
 
     public Task getRandomTask(Solution solution, Core core) {
-
-
         ArrayList<Task> tasks =  solution.getCoreTasks(core);
-        System.out.println(tasks.size());
+
         int rnd = new Random().nextInt(tasks.size());
         return tasks.get(rnd);
     }
@@ -125,6 +104,7 @@ public class SA implements MetaHeuristic{
         float total_cost = 0f;
         while (i.hasNext()) {
             c = i.next();
+
             c.scheduleTasks(s.getCoreTasks(c));
 
             total_cost += c.calculateCostFunction(s.getCoreTasks(c));
@@ -213,20 +193,14 @@ public class SA implements MetaHeuristic{
     @Override
     public void run() {
         Solution s_i = getSolution();
-        Solution si2 = s_i.clone();
+
         float t = t_start;
         Solution next;
 
         long t0 = System.currentTimeMillis();
+        int counter = 0;
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
-            try
-            {
-                Thread.sleep(800);
-            }
-            catch(InterruptedException ex)
-            {
-                Thread.currentThread().interrupt();
-            }
+
 
             if (Math.random() < 0.5) {
 
@@ -237,12 +211,15 @@ public class SA implements MetaHeuristic{
             }
             float costCurrent = f(s_i);
             float costNext = f(next);
-            System.out.println("current: " +costCurrent);
-            System.out.println("next: " +costNext);
-            float delta = costNext - costCurrent;
 
-            if (delta > 0 || p(delta, t)) {
-                System.out.println("returned true.... temp is " + t);
+            float delta = costNext - costCurrent;
+            boolean prob = p(delta, t);
+
+            if (prob){
+                counter ++;
+            }
+
+            if (delta > 0 || prob) {
                 s_i = next;
             }
             t = t*alpha;
@@ -250,6 +227,7 @@ public class SA implements MetaHeuristic{
 
         this.solution = s_i;
         this.solution.setLaxity();
+        System.out.println("Prob true times: " + counter);
     }
 
     private boolean p(float delta, float t) {

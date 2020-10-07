@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class Platform {
@@ -9,6 +10,17 @@ public class Platform {
         cores = Cores;
     }
 
+    public int getMaxCoreID() {
+        int maxId = 0;
+        for (Core core : cores){
+            if (Integer.parseInt(core.getId()) > maxId){
+                maxId = Integer.parseInt(core.getId());
+            }
+
+        }
+
+        return maxId;
+    }
     public Core getCoreById(String coreId) {
 
         for (Core core : cores) {
