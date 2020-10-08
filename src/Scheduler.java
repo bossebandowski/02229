@@ -8,7 +8,7 @@ public class Scheduler {
 
     static float alpha = 0.99f;
     static float t_start = 100;
-    static float runtime_s = 60f;
+    static float runtime_s = 10f;
 
 
     public Scheduler(MetaHeuristic strategy, Platform platform1, ArrayList<Task> tasks) {
@@ -26,6 +26,13 @@ public class Scheduler {
 
     public Solution getSolution() {
         return this.strategy.getSolution();
+    }
+
+    private boolean checkSolution() {
+        for (Core c : this.platform.getCores()) {
+            if (!c.feasible) return false;
+        }
+        return true;
     }
 
     public static void run(String pathIn, String pathOut) {
@@ -51,6 +58,13 @@ public class Scheduler {
 
         // run assignment strategy
         scheduler.runStrategy();
+
+        // check if solution ok
+        if (scheduler.checkSolution()) {
+            System.out.println("Solution ok.");
+        } else {
+            System.out.println("Solution NOT ok.");
+        }
 
         System.out.println("Writing to output file...");
         // pass solution to io interface and write to file

@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
@@ -46,7 +45,7 @@ public class Solution {
             c = i.next();
 
 
-            totalLaxity += c.calculateCostFunction(getCoreTasks(c));
+            totalLaxity += c.calculateScore(getCoreTasks(c));
         }
 
         avgLaxity = totalLaxity/num_tasks;

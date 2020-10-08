@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.Math;
 import java.util.Random;
@@ -101,21 +100,21 @@ public class SA implements MetaHeuristic{
         Iterator<Core> i = cores.iterator();
         Core c;
 
-        float total_cost = 0f;
+        float total_score = 0f;
         while (i.hasNext()) {
             c = i.next();
 
             c.scheduleTasks(s.getCoreTasks(c));
 
-            total_cost += c.calculateCostFunction(s.getCoreTasks(c));
+            total_score += c.calculateScore(s.getCoreTasks(c));
 
             // punish for unfeasible
             if (!c.feasible) {
-                total_cost = (float) (total_cost * 0.5);
+                total_score = (float) (total_score * 0.5);
             }
 
         }
-        return total_cost;
+        return total_score;
     }
 
     public int partition(ArrayList<Task> arr, int low, int high)
@@ -198,28 +197,23 @@ public class SA implements MetaHeuristic{
         Solution next;
 
         long t0 = System.currentTimeMillis();
-        int counter = 0;
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
 
-
             if (Math.random() < 0.5) {
-
                 next = generateNeighbourhood(neighborhood_function.swap, s_i);
             } else {
-
                 next = generateNeighbourhood(neighborhood_function.move, s_i);
             }
-            float costCurrent = f(s_i);
-            float costNext = f(next);
+            float scoreCurrent = f(s_i);
+            float scoreNext = f(next);
 
-            float delta = costNext - costCurrent;
-            boolean prob = p(delta, t);
+            System.out.println("Current solution score: " + scoreCurrent);
 
-            if (prob){
-                counter ++;
-            }
 
-            if (delta > 0 || prob) {
+            float delta = scoreNext - scoreCurrent;
+
+            if (delta >= 0 || p(delta, t)) {
+                System.out.println("updating s_i");
                 s_i = next;
             }
             t = t*alpha;
@@ -227,12 +221,11 @@ public class SA implements MetaHeuristic{
 
         this.solution = s_i;
         this.solution.setLaxity();
-        System.out.println("Prob true times: " + counter);
     }
 
     private boolean p(float delta, float t) {
-        double random = Math.random();
-        return Math.exp(Math.abs(delta) / t) < random;
+        boolean out = Math.exp(-(Math.abs(delta) / t)) > Math.random();
+        return out;
     }
 }
 
