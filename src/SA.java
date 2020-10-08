@@ -225,6 +225,8 @@ public class SA implements MetaHeuristic{
 
         this.solution.setLaxity();
 
+        System.out.println("after calculating laxity");
+
         for (Core c : this.platform.getCores()) {
             if (!c.feasible) System.out.println("INFEASIBLE!!!");;
         }
