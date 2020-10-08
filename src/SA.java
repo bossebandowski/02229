@@ -110,7 +110,7 @@ public class SA implements MetaHeuristic{
 
             // punish for unfeasible
             if (!c.feasible) {
-                total_score = (float) (total_score * 0.5);
+                total_score = (float) (total_score * 0.1);
             }
 
         }
@@ -213,14 +213,21 @@ public class SA implements MetaHeuristic{
             float delta = scoreNext - scoreCurrent;
 
             if (delta >= 0 || p(delta, t)) {
-                System.out.println("updating s_i");
                 s_i = next;
             }
             t = t*alpha;
         }
 
         this.solution = s_i;
+        for (Core c : this.platform.getCores()) {
+            if (!c.feasible) System.out.println("INFEASIBLE!!!");;
+        }
+
         this.solution.setLaxity();
+
+        for (Core c : this.platform.getCores()) {
+            if (!c.feasible) System.out.println("INFEASIBLE!!!");;
+        }
     }
 
     private boolean p(float delta, float t) {

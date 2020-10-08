@@ -28,13 +28,6 @@ public class Scheduler {
         return this.strategy.getSolution();
     }
 
-    private boolean checkSolution() {
-        for (Core c : this.platform.getCores()) {
-            if (!c.feasible) return false;
-        }
-        return true;
-    }
-
     public static void run(String pathIn, String pathOut) {
         // instantiate Task priorities (class var)
         Task.priorities = new ArrayList<>();
@@ -58,13 +51,6 @@ public class Scheduler {
 
         // run assignment strategy
         scheduler.runStrategy();
-
-        // check if solution ok
-        if (scheduler.checkSolution()) {
-            System.out.println("Solution ok.");
-        } else {
-            System.out.println("Solution NOT ok.");
-        }
 
         System.out.println("Writing to output file...");
         // pass solution to io interface and write to file
