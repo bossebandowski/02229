@@ -38,9 +38,10 @@ public class SA implements MetaHeuristic{
 
 
         Solution new_solution = currentSolution.clone();
-        int maxCoreId = platform.getMaxCoreID();
+        int maxCoreId = platform.getMaxCoreUid();
         switch (neighborhood){
             case swap:
+
                 // get a random core from map
                 Core core1 = new_solution.getRandomCoreFromMap(new_solution.getMappedCoreIds());
 
@@ -58,6 +59,7 @@ public class SA implements MetaHeuristic{
                 Task task1 = getRandomTask(new_solution, core1);
                 Task task2 = getRandomTask(new_solution, core2);
 
+
                 new_solution.changeCore(task1,core2);
                 new_solution.changeCore(task2,core1);
 
@@ -69,7 +71,7 @@ public class SA implements MetaHeuristic{
 
                 Task task = getRandomTask(new_solution, coreFrom);
                 String core2_id = String.valueOf(new Random().nextInt(maxCoreId));
-                while (coreFrom.getId().equals(core2_id)){
+                while (coreFrom.getUid().equals(core2_id)){
                     core2_id = String.valueOf(new Random().nextInt(maxCoreId));
                 };
 
@@ -106,6 +108,8 @@ public class SA implements MetaHeuristic{
             c = i.next();
 
             c.scheduleTasks(s.getCoreTasks(c));
+
+
 
             total_score += c.calculateScore(s.getCoreTasks(c));
             // punish for unfeasible
