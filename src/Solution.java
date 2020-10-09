@@ -19,9 +19,9 @@ public class Solution {
 
         ArrayList<Task> tasks = new ArrayList<>();
         for (Map.Entry<Task, Core> entry : this.solutionMap.entrySet()) {
-            String entryId = entry.getValue().getId();
-            String coreId = core.getId();
-            if (entry.getValue().getId().equals(core.getId())) {
+            String entryId = entry.getValue().getUid();
+            String coreId = core.getUid();
+            if (entry.getValue().getUid().equals(core.getUid())) {
                 tasks.add(entry.getKey());
             }
         }
@@ -100,7 +100,7 @@ public class Solution {
     public Set<String> getMappedCoreIds(){
         Set<String> setIds = new HashSet<>();
         for (Core core : this.solutionMap.values() ){
-            setIds.add(core.getId());
+            setIds.add(core.getUid());
         }
 
         return setIds ;
@@ -112,6 +112,7 @@ public class Solution {
             Object[] values = solutionMap.values().toArray();
             return (Core) values[0];
         }
+
         int rnd_index = new Random().nextInt(numOfIds);
         String[] array = CoreIds.toArray( new String[numOfIds] );
 
@@ -125,7 +126,8 @@ public class Solution {
 
         Set<String> setIds = getMappedCoreIds();
 
-        setIds.remove(exceptCore.getId());
+
+        setIds.remove(exceptCore.getUid());
 
 
         Core core =  getRandomCoreFromMap(setIds);
@@ -143,7 +145,7 @@ public class Solution {
             c = i.next();
 
 
-            if (c.getId().equals(coreId)){
+            if (c.getUid().equals(coreId)){
                 return c;
             }
         }

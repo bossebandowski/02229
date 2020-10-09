@@ -10,11 +10,11 @@ public class Platform {
         cores = Cores;
     }
 
-    public int getMaxCoreID() {
+    public int getMaxCoreUid() {
         int maxId = 0;
         for (Core core : cores){
             if (Integer.parseInt(core.getId()) > maxId){
-                maxId = Integer.parseInt(core.getId());
+                maxId = Integer.parseInt(core.getUid());
             }
 
         }
