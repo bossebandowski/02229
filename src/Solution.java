@@ -43,8 +43,6 @@ public class Solution {
 
         while (i.hasNext()) {
             c = i.next();
-
-
             totalLaxity += c.calculateScore(getCoreTasks(c));
         }
 
@@ -87,7 +85,6 @@ public class Solution {
             float wcet = task.getWcet();
             SolutionOutput solutionOut = new SolutionOutput(task_id,core_id,core_MCP,wcet);
             out.add(solutionOut);
-
 
         }
         return out;
@@ -133,6 +130,7 @@ public class Solution {
 
     }
 
+
     public Core getCoreById(String coreId) {
 
         Collection<Core> cores = getCores();
@@ -167,4 +165,6 @@ class SolutionOutput {
         this.Core = core;
         this.WCET = WCET;
     }
+
+
 }

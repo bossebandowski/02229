@@ -1,3 +1,4 @@
+import java.sql.Time;
 import java.util.*;
 import java.lang.Math;
 import java.util.Random;
@@ -15,7 +16,7 @@ public class SA implements MetaHeuristic{
     private Solution solution;
     private float stop_Criteria;
     final Platform platform;
-
+    public Solution last_feasible;
 
     /**
      *  @param alpha
@@ -107,9 +108,10 @@ public class SA implements MetaHeuristic{
             c.scheduleTasks(s.getCoreTasks(c));
 
             total_score += c.calculateScore(s.getCoreTasks(c));
-
             // punish for unfeasible
             if (!c.feasible) {
+                // store last feasible we had
+                last_feasible = getSolution();
                 total_score = (float) (total_score * 0.1);
             }
 
@@ -198,16 +200,17 @@ public class SA implements MetaHeuristic{
 
         long t0 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - t0)/1000f < stop_Criteria) {
-
             if (Math.random() < 0.5) {
+                //System.out.println("Next is a swap");
                 next = generateNeighbourhood(neighborhood_function.swap, s_i);
             } else {
+                //System.out.println("Next is move");
                 next = generateNeighbourhood(neighborhood_function.move, s_i);
             }
             float scoreCurrent = f(s_i);
             float scoreNext = f(next);
 
-            System.out.println("Current solution score: " + scoreCurrent);
+            //System.out.println("Current solution score: " + scoreCurrent);
 
 
             float delta = scoreNext - scoreCurrent;
@@ -215,21 +218,25 @@ public class SA implements MetaHeuristic{
             if (delta >= 0 || p(delta, t)) {
                 s_i = next;
             }
+            else {
+            }
             t = t*alpha;
+
         }
 
         this.solution = s_i;
-        for (Core c : this.platform.getCores()) {
-            if (!c.feasible) System.out.println("INFEASIBLE!!!");;
+
+        for (Map.Entry<Task, Core> hmap: solution.solutionMap.entrySet()) {
+            Core c1 = hmap.getValue();
+            if (!c1.isFeasible()) {
+                System.out.println("UNFEASIBLE");
+                System.out.println("Using last feasible");
+                this.solution = last_feasible;
+                break;
+            }
         }
 
         this.solution.setLaxity();
-
-        System.out.println("after calculating laxity");
-
-        for (Core c : this.platform.getCores()) {
-            if (!c.feasible) System.out.println("INFEASIBLE!!!");;
-        }
     }
 
     private boolean p(float delta, float t) {

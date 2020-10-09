@@ -21,6 +21,4 @@ public class TestBench {
             Scheduler.run(tb.testFiles.get(i), tb.solutionFiles.get(i));
         }
     }
-
-
 }
