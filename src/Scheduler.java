@@ -6,9 +6,9 @@ public class Scheduler {
     private final Platform platform;
     private List<Task> tasks;
 
-    static float alpha = 0.99f;
-    static float t_start = 100;
-    static float runtime_s = 10f;
+    static float alpha = 0.97f;
+    static float t_start = 100000;
+    static float runtime_s = 30f;
 
 
     public Scheduler(MetaHeuristic strategy, Platform platform1, ArrayList<Task> tasks) {

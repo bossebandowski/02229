@@ -102,23 +102,25 @@ public class SA implements MetaHeuristic{
         Collection<Core> cores = s.getCores();
         Iterator<Core> i = cores.iterator();
         Core c;
-
-        float total_score = 0f;
+        boolean unfeasible = false;
+        //float total_score = 0f;
         while (i.hasNext()) {
             c = i.next();
-
             c.scheduleTasks(s.getCoreTasks(c));
-
-
-
-            total_score += c.calculateScore(s.getCoreTasks(c));
+            //total_score += c.calculateScore(s.getCoreTasks(c));
             // punish for unfeasible
             if (!c.feasible) {
+                unfeasible = true;
                 // store last feasible we had
-                last_feasible = getSolution();
-                total_score = (float) (total_score * 0.1);
+                //last_feasible = getSolution();
+                //total_score = (float) (total_score * 0.1);
             }
 
+        }
+        float total_score = s.calculateScoreNew();
+        if(unfeasible == true)
+        {
+            total_score = (float )(total_score * 0.1);
         }
         return total_score;
     }
@@ -225,7 +227,7 @@ public class SA implements MetaHeuristic{
             else {
             }
             t = t*alpha;
-
+            System.out.println("Score:" + scoreCurrent);
         }
 
         this.solution = s_i;

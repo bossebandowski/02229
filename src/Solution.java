@@ -41,10 +41,11 @@ public class Solution {
         Iterator<Core> i = cores.iterator();
         Core c;
 
-        while (i.hasNext()) {
+        /*while (i.hasNext()) {
             c = i.next();
             totalLaxity += c.calculateScore(getCoreTasks(c));
-        }
+        }*/
+        totalLaxity = this.calculateScoreNew();
 
         avgLaxity = totalLaxity/num_tasks;
     }
@@ -83,7 +84,7 @@ public class Solution {
             String core_id=core.getId();
             String core_MCP = core.getMcpID();
             float wcet = task.getWcet();
-            SolutionOutput solutionOut = new SolutionOutput(task_id,core_id,core_MCP,wcet);
+            SolutionOutput solutionOut = new SolutionOutput(task_id,core_MCP,core_id,wcet);
             out.add(solutionOut);
 
         }
@@ -150,7 +151,15 @@ public class Solution {
         return null;
     }
 
-
+    public float calculateScoreNew()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        float result = (float) 0.0;
+        for (Map.Entry<Task, Core> entry : this.solutionMap.entrySet()) {
+            result += entry.getKey().getDeadline() - entry.getKey().getWcrt();
+        }
+        return result;
+    }
 
 
 }
